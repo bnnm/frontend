@@ -1,0 +1,78 @@
+body {
+    line-height: 1.3em;
+    margin: .5em;
+    padding: 0;
+}
+
+h1 {
+    font-size: 1em;
+    font-weight: normal;
+    margin: 0; padding: 0;
+}
+
+a {
+    text-decoration: underline;
+    cursor: pointer;
+    color: #0000EE;
+}
+
+a:visited {
+    color: #551A8B;
+}
+
+.tpl { display:none; }
+
+.header { margin-bottom: 1em; }
+.head { display:inline-block; }
+.links { float: right; }
+
+.results {
+    margin: 1em 0 1.3em 0;
+}
+.systems {
+    margin: 1em 0 1.3em 0;    
+}
+
+#search {
+    min-width: 200px;
+}
+
+.tag {
+    color: #666;
+    border: 1px solid #999;
+    padding: 2px 2px 0;
+    margin: 0 2px;
+    border-radius: .17em;
+    font-size: smaller;
+    white-space: nowrap;
+}
+
+.tag, .showset {
+    cursor: pointer;
+}
+
+.showset {
+    margin: 0 5px;
+}
+
+/*
+#pagenr {
+    width: 3.5em;
+    margin: 0 0.5em 0 0.3em;
+}
+*/
+
+.date {
+    font-size: smaller;
+    margin: 1em 1em .5em;
+    //border-bottom: 1px solid #ddd;
+}
+.date hr { padding: 0; margin: 0; border:0;  border-bottom: 1px solid #ddd; }
+
+.dupes {
+    display: none;
+}
+
+.tag.remove, .bold {
+    font-weight: bold;
+}
