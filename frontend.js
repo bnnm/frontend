@@ -1,5 +1,6 @@
-(function() {
+(function () {
     "use strict";
+    const $_id = (id) => document.getElementById(id);
     const SETS_URL = 'index.json';
     const PAGE_RESULTS = 100;
     const SYSTEM_CONFIG = {
@@ -132,22 +133,22 @@
             for (let term of terms) {
                 if (!term)
                     continue;
-                let char0 = term.charAt(0); //todo preload
+                let char0 = term[0]; //todo preload
 
-                if (char0 == '^') {
+                if (char0 == '^' && term.length > 1) {
                     if (!cmp.startsWith(term.substring(1)))
                         return false
                     continue;
                 }
 
-                if (char0 == '-') {
-                    if (cmp.indexOf(term.substring(1)) >= 0)
+                if (char0 == '-' && term.length > 1) {
+                    if (cmp.includes(term.substring(1)))
                         return false
                     continue;
                 }
 
                 // AND search, unlike original OR, and always partial matches
-                if (cmp.indexOf(term) < 0)
+                if (!cmp.includes(term))
                     return false;
             }
             
@@ -242,23 +243,23 @@
 
 
     function Printer() {
-        let $content = document.getElementById('content');
-        let $form = document.getElementById('searchform');
+        let $content = $_id('content');
+        let $form = $_id('searchform');
         let $site = $form['site'];
         let $page = $form['page'];
 
-        var tpl_results_recent = document.getElementById('tpl-results-recent');
-        var tpl_results_search = document.getElementById('tpl-results-search');
-        var tpl_systems = document.getElementById('tpl-systems');
-        var tpl_system = document.getElementById('tpl-system');
-        var tpl_urls = document.getElementById('tpl-urls');
-        var tpl_url = document.getElementById('tpl-url');
-        var tpl_date = document.getElementById('tpl-date');
-        var tpl_pagination = document.getElementById('tpl-pagination');
-        var tpl_page_selected = document.getElementById('tpl-page-selected');
-        var tpl_page_number = document.getElementById('tpl-page-number');
-        var tpl_page_prev = document.getElementById('tpl-page-prev');
-        var tpl_page_next = document.getElementById('tpl-page-next');
+        var tpl_results_recent = $_id('tpl-results-recent');
+        var tpl_results_search = $_id('tpl-results-search');
+        var tpl_systems = $_id('tpl-systems');
+        var tpl_system = $_id('tpl-system');
+        var tpl_urls = $_id('tpl-urls');
+        var tpl_url = $_id('tpl-url');
+        var tpl_date = $_id('tpl-date');
+        var tpl_pagination = $_id('tpl-pagination');
+        var tpl_page_number = $_id('tpl-page-number');
+        var tpl_page_prev = $_id('tpl-page-prev');
+        var tpl_page_next = $_id('tpl-page-next');
+        var tpl_page_more = $_id('tpl-page-more');
 
         function get_node(tpl) {
             let $node = tpl.cloneNode(true);
@@ -270,7 +271,7 @@
             return document.createTextNode(' ');
         }
 
-        function clean_page() {
+        function clean_content() {
             //$content.innerHTML = '';
             // faster/cleaner?
             var $content_new = $content.cloneNode(false);
@@ -279,20 +280,23 @@
         }
 
 
-        function get_page() {
+        function get_page(sets) {
             let page = $page.value || 0;
             try {
                 page = parseInt(page);
                 page -= 1;
                 if (page < 0)
                     page = 0;
+
+                // clamp max page
+                let pages = parseInt(sets.length / PAGE_RESULTS) + 1;
+                if (page >= pages)
+                    page = pages - 1;
+
             } catch(error) {
                 page = 0;
             }
 
-            //todo clamp max page
-
-            console.log("page", page)
             return page;
         }
 
@@ -301,26 +305,28 @@
             let $urls = get_node(tpl_urls);
             let $pagination = get_node(tpl_pagination);
             
-            let page = get_page();
+            let sets = db.results;
+            let sites =  db.subdomains;
+            let page = get_page(sets);
 
-            fill_results_search($results, db.results);
-            fill_systems($systems, db.subdomains);
-            fill_urls($urls, db.results, page, separator);
-            fill_pagination($pagination, db.results, page);
+            fill_results_search($results, sets);
+            fill_systems($systems, sites);
+            fill_urls($urls, sets, page, separator);
+            fill_pagination($pagination, sets, page);
 
-            clean_page();
+            clean_content();
             $content.appendChild($results);
             $content.appendChild($systems);
             $content.appendChild($urls);
             $content.appendChild($pagination);
         }
 
-        this.print_recent = function() {
+        this.print_recent = function () {
             let $results = get_node(tpl_results_recent);
             print_page_common($results, true);
         }
 
-        this.print_search = function() {
+        this.print_search = function () {
             let $results = get_node(tpl_results_search);
             print_page_common($results, false);
             return;
@@ -399,97 +405,114 @@
        
         function fill_pagination($block, sets, page) {
             let total = sets.length;
-            
             let pages = parseInt(total / PAGE_RESULTS) + 1;
-            
-            let $selected = get_node(tpl_page_selected);
-            
-            $selected.textContent = page;
 
-            if (page > 0) {
-                let $prev = get_node(tpl_page_prev);
-                $prev.dataset.page = page + 1 - 1;
-                $block.appendChild($prev);
-            }
-            
+            if (pages == 1)
+                return;
+
+
+            let $prev = get_node(tpl_page_prev);
+            $prev.dataset.page = page + 1 - 1;
+            $prev.classList.toggle('disabled', page < 1);
+            $block.appendChild($prev);
+
             let limit = pages;
             if (limit > 10)
                 limit = 10;
-            //todo max N pages, then ... (last page)
-            
+
             for (let i = 0; i < limit; i++) {
-                let $page;
-                if (i == page) {
-                    $page = get_node(tpl_page_selected);
-                }
-                else {
-                    $page = get_node(tpl_page_number);
-                }
-                $page.dataset.page = i + 1;
-                $page.textContent = i + 1;
+                let $number = get_node(tpl_page_number);
+                $number.dataset.page = i + 1;
+                $number.textContent = i + 1;
+                $number.classList.toggle('selected', i == page);
 
-                $block.appendChild($page);
+                $block.appendChild($number);
             }
-            
+
+            if (pages > limit && page > limit) {
+                let $more = get_node(tpl_page_more);
+
+                $block.appendChild($more);
+            }
+
             if (page >= limit) {
-                $page = get_node(tpl_page_selected);
-                $page.dataset.page = page + 1;
-                $page.textContent = page + 1;
-                $block.appendChild($page);
+                let $number = get_node(tpl_page_number);
+                $number.dataset.page = page + 1;
+                $number.textContent = page + 1;
+                $number.classList.add('selected');
+
+                $block.appendChild($number);
             }
 
-            if (page + 1 < pages) {
-                let $next = get_node(tpl_page_next);
-                $next.dataset.page = page + 1 + 1;
-                $block.appendChild($next);
+            if (pages > limit && page + 1 < pages) {
+                let $more = get_node(tpl_page_more);
+                $block.appendChild($more);
             }
 
-            //if (sets.length > PAGE_RESULTS)
-            //    $block.textContent = `... (total ${sets.length})`;
+            let $next = get_node(tpl_page_next);
+            $next.dataset.page = page + 1 + 1;
+            $next.classList.toggle('disabled', page + 1 >= pages);
+            $block.appendChild($next);
         }
     }
 
     function Web() {
-        // add button functions
-        var $main = document.getElementById('main');
-        var $form = document.getElementById('searchform');
+        let $banana = $_id('banana');
+        let $main = $_id('main');
+        let $form = $_id('searchform');
         let $text = $form['text'];
         let $site = $form['site'];
+        let $page = $form['page'];
         let self = this;
 
         // query on "[(system)]" click
         $main.addEventListener('click', event => {
-            if (!event.target.matches('.sitetag'))
+            if (!event.target.matches('[data-site], [data-page]'))
                 return;
 
             let site = event.target.dataset.site;
-            if (site == $site.value)
-                site = '';
-            $site.value = site;
+            if (site !== undefined) {
+                if (site === $site.value)
+                    site = '';
+                $site.value = site;
+            }
 
-            submit(event, this);
-            //$form.submit()
+            let page = event.target.dataset.page;
+            if (page !== undefined) {
+                $page.value = page;
+                window.scroll(0,0);
+            }
+
+            submit();
+            //$form.submit() //todo dispatchEvent (no validation), onclick, requestSubmit (no safari)
         });
 
+        $banana.addEventListener('click', event => {
+            document.body.classList.toggle('banana')
+        });
+
+
         // search form
-        $form.addEventListener("submit", event => {
-            submit(event, this);
+        $form.addEventListener('submit', event => {
+            $page.value = ''; //always reset pages when searching via form submit
+            submit();
+            event.preventDefault();
         });
 
         window.addEventListener('popstate', (event) => {
             load_params();
 
-            // don't push state
-            this.show_results();
+            // don't submit/push state
+            show_results();
         });
 
         load_sets();
 
-        function submit(event, elem) {
+        function submit() {
             let data = new FormData($form)
             let params = new URLSearchParams(data);
 
-            // clean empty params
+            // clean empty params (with a copy)
             [...params.entries()].forEach(([key, value]) => {
                 if (!value) //0 or ''
                     params.delete(key);
@@ -499,12 +522,15 @@
             url = `?${url}`; //force '?'
             history.pushState(data, null, url);
 
-            elem.show_results();
-            event.preventDefault();
+            show_results();
         }
 
         function load_params() {
-            $form.reset();
+            //$form.reset(); //no good in hidden fields
+            $text.value = '';
+            $site.value = '';
+            $page.value = '';
+
             if (location.search) {
                 let params = new URLSearchParams(location.search);
                 for (let p of params.keys()) {
@@ -526,7 +552,7 @@
             return q;
         }
 
-        this.show_results = function() {
+        function show_results() {
             let q = get_query();
             db.query_search(q);
 
@@ -535,7 +561,7 @@
             else
                 pt.print_search();
         }
-        
+
         function load_sets() {
             // get json with set info
             // could save as localStorage, but some browsers limit max size and if
@@ -545,7 +571,7 @@
                 .then(response => {
                     db.init(response);
                     load_params();
-                    self.show_results();
+                    show_results();
                 })
                 .catch(error => {
                     console.error('Error:', error)
