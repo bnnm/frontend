@@ -9,30 +9,32 @@
 </head>
 <body>
     <div class="header">
-        <h1 class="head">xxx.joshw.info - Updates, Search and Stuff &#x1F34C;</h1>
+        <h1 class="head">xxx.joshw.info Updates, Search and Stuff &#x1F34C;</h1>
         <div class="links">
-            <a href="#updates">Updates</a> · <!--https://vgm.hcs64.com/ -->
-            <a href="#tags" class="add" data-tag="*">Tags</a> ·
+            <a href="?">Updates</a> ·
+            <!--<a href="#tags" class="add" data-tag="*">Tags</a> ·-->
             <a href="https://vgm.hcs64.com/upload/" target="_blank">Contribute</a> ·
             <a href="https://hcs64.com/" target="_blank">HCS</a> ·
             <a href="https://hcs64.com/mboard/forum.php" target="_blank">Forum</a>
         </div>
     </div>
 
-    <form id="searchform">
-        <input name="search" placeholder="Go ahead, search away!" id="search" type="search" tabindex="1" autocomplete="off">
-        <!--
-        <input type="hidden" name="page"/>
+    <form id="searchform" action="search">
+        <input name="text" placeholder="Go ahead, search away!" id="search" type="search" tabindex="1" autocomplete="off">
         <input type="hidden" name="site"/>
+        <input type="hidden" name="page"/>
+        <!--
         <input type="hidden" name="set"/>
         <input type="hidden" name="tags"/>
         -->
-        <input type="submit" name="submit" value="Go">
+        <input type="submit" value="Go">
 
         <small><i>term</i> partial matches, <b>"</b><i>term term</i><b>"</b> exact phrase, <b>^</b><i>term</i> start of title, <b>-</b><i>term</i> exclude matches</small>
     </form>
 
-    <div id="content">
+    <div id="main">
+        <div id="content">
+        </div>
     </div>
 
     <div class="tpl">
@@ -56,7 +58,7 @@
             <hr>
         </div>
 
-        <div id="tpl-urls">
+        <div id="tpl-urls" class="urls">
         </div>
 
         <div id="tpl-url">
@@ -64,10 +66,14 @@
             <span title="filter" class="sitetag tag" data-site=""></span>
             <small class="info">211.51MB 2021-09-16 09:13</small>
             <span class="showset tag" data-set="" title="show details" style="display:none;">···</span>
-        <div>
-
-        <div id="tpl-pagination">
         </div>
+
+        <div id="tpl-pagination" class="pagination">
+        </div>
+        <span id="tpl-page-selected" class="selected"></span>
+        <a id="tpl-page-number" data-page=""></a>
+        <a id="tpl-page-prev">&lt; previous</a>
+        <a id="tpl-page-next">next &gt;</a>
     </div>
 
     <script src="frontend.js"></script>

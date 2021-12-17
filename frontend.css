@@ -2,6 +2,7 @@ body {
     line-height: 1.3em;
     margin: .5em;
     padding: 0;
+    background-color:#ffffffff;
 }
 
 h1 {
@@ -14,7 +15,14 @@ a {
     text-decoration: underline;
     cursor: pointer;
     color: #0000EE;
+    
+    text-decoration: none;
 }
+a:hover {
+    text-decoration: underline;
+}
+
+.info { color: #666; }
 
 a:visited {
     color: #551A8B;
@@ -37,6 +45,14 @@ a:visited {
     min-width: 200px;
 }
 
+.pagination {
+    margin: 2em 0em 2em 0em;
+}
+.pagination a, .pagination span {
+    padding: 0 0.1em 0 0.1em;
+}
+
+
 .tag {
     color: #666;
     border: 1px solid #999;
@@ -45,6 +61,7 @@ a:visited {
     border-radius: .17em;
     font-size: smaller;
     white-space: nowrap;
+    background-color:#ffffffff;
 }
 
 .tag, .showset {
@@ -73,6 +90,6 @@ a:visited {
     display: none;
 }
 
-.tag.remove, .bold {
+.tag.remove, .bold, .selected {
     font-weight: bold;
 }

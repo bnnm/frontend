@@ -1,10 +1,7 @@
 (function() {
     "use strict";
-    const DB_STATE_KEY = 'joshw_frontend_state_v1';
-    const DB_STATE_MAXTIME_MS = 60 * 60 * 1000;
-    const URL = 'index.json';
+    const SETS_URL = 'index.json';
     const PAGE_RESULTS = 100;
-
     const SYSTEM_CONFIG = {
         '2sf': "DS",
         '3do': "3DO",
@@ -41,91 +38,31 @@
         'switch': "Switch"
     }
 
-    var ld;
     var db;
     var pt;
     var wb;
 
-    class Loader {
-        constructor() {
-        }
-        
-        setup() {
-            //let state = localStorage.getItem(DB_STATE_KEY);
-            //db.load(state)
-            //if (db.is_old())
-
-            this.load_ajax();
-        }
-
-        load_ajax() {
-            fetch(URL)
-                .then(res => res.json())
-                .then(response => {
-                    db.init(response);
-                    //todo promise?
-                    let state = db.save();
-                    //TODO: too large to store? not too important with browser CDN cache
-                    //localStorage.setItem(DB_STATE_KEY, state);
-
-                    wb.show_recent();
-                })
-                .catch(error => {
-                    console.error('Error:', error)
-                });
-        }
-    }
-
     //{"size": 123456789, "subdomain": 'xxx', "inode": 123, "name": "(path)/(name)", "modified": "2000-01-01 10:10"},
     class Database {
         constructor() {
-            this._modified = null;
             this._sets = [];
             this.query_empty();
         }
 
         init(sets) {
-            this._modified = Date.now();
             this._sets = sets;
 
             this._prepare_sets();
             this.query_empty();
         }
-        
-        load(state) {
-            if (!state) {
-                return;
-            }
-            console.log("DB: loading state");
-            state = JSON.parse(state);
-            this._modified = state.modified
-            this._sets = state.sets;
 
-            //sets should be prepared
-            this.query_empty();
-        }
-
-        is_old()  {
-            //TODO: too test 
-            if (this._modified == null) {
-                console.log("DB: no state found");
-                return true;
-            }
-            
-            let diff = Date.now() - this._modified;
-            if (diff > DB_STATE_MAXTIME_MS) {
-                return true;
-            }
-
-            return false;
-        }
-
-        save() {
-            let state = {
-                modified: this._modified,
-                sets: this._sets
-            };
-            return JSON.stringify(state)
+        _prepare_sets() {
+            this._sets.forEach(set => {
+                this._load_basename(set);
+                this._load_sizeview(set);
+                this._load_url(set);
+                this._load_date(set);
+            });
         }
 
         _load_basename(set) {
@@ -160,27 +97,17 @@
         }
 
         _load_url(set) {
-            
             set.url = `https://${set.subdomain}.joshw.info/${set.name}`;
             if (set.url.indexOf('#')) 
                 set.url = set.url.replaceAll('#', '%23')
         }
-        
+
         _load_date(set) {
             let date = set.modified;
             let index = date.indexOf(' ');
             if (index)
                 date = date.substring(0, index);
             set.date = date;
-        }
-
-        _prepare_sets() {
-            this._sets.forEach(set => {
-                this._load_basename(set);
-                this._load_sizeview(set);
-                this._load_url(set);
-                this._load_date(set);
-            });
         }
 
         query_empty() {
@@ -200,15 +127,11 @@
             this._sort_subdomains();
         }
 
-        _is_match(terms, set) {
-            //TODO: partial matches, search term too short, etc
-
+        _is_match_term(terms, set) {
             let cmp = set.basename_lw;
-            for (let i = 0; i < terms.length; i++) {
-                let term = terms[i];
+            for (let term of terms) {
                 if (!term)
                     continue;
-
                 let char0 = term.charAt(0); //todo preload
 
                 if (char0 == '^') {
@@ -223,17 +146,26 @@
                     continue;
                 }
 
-                // AND search, unlike original OR
+                // AND search, unlike original OR, and always partial matches
                 if (cmp.indexOf(term) < 0)
+                    return false;
+            }
+            
+            return true;
+        }
+
+        _is_match_site(site, set) {
+            if (site) {
+                if (set.subdomain != site)
                     return false;
             }
 
             return true;
         }
-        
+
         _get_terms(text) {
             text = text.toLowerCase()
-            //todo
+            //TODO improve
             let terms = text.match(/\\?.|^$/g).reduce((p, c) => {
                     if (c === '"') {
                         p.quote ^= 1;
@@ -244,29 +176,37 @@
                     }
                     return  p;
                 }, {a: ['']}).a;
-            
-            console.log(terms)
     
             //let terms = let text = text.split(' ');
             return terms;
-            
         }
 
-        query_search(text) {
-            let terms = this._get_terms(text)
+        query_search(q) {
+            let terms = this._get_terms(q.text)
 
-            this.results = [];
+            if (q.site && !SYSTEM_CONFIG[q.site])
+                q.site = '';
+
             this.subdomains = {};
-
+            this.results = [];
+            
             this._sets.forEach(set => {
-                if (!this._is_match(terms, set))
-                    return;
-                this.results.push(set);
-                this._load_subdomain(set);
+                let term_ok = this._is_match_term(terms, set);
+                let site_ok = this._is_match_site(q.site, set);
+
+                if (term_ok && site_ok) {
+                    this.results.push(set);
+                }
+                if (term_ok && site_ok || q.showRecent) {
+                    this._load_subdomain(set);
+                }
             });
 
+            // should always include current
+            if (q.site && !this.subdomains[q.site])
+                this.subdomains[q.site] = 0;
 
-            this._sort_results(false);
+            this._sort_results(q.showRecent);
             this._sort_subdomains();
         }
 
@@ -284,10 +224,12 @@
         }
 
         _sort_subdomains() {
-            Object.entries(this.subdomains)   // [key,val] array
-                .sort((a, b) => {
-                    return b[1] - a[1];     //sort by value (total sets)
-            });
+            //this.subdomains.sort((a, b) => b[1] - a[1]);
+            
+            //Object.entries(this.subdomains)   // [key,val] array
+            //    .sort((a, b) => {
+            //        return b[1] - a[1];     //sort by value (total sets)
+            //});
         }
 
         _load_subdomain(set) {
@@ -300,7 +242,10 @@
 
 
     function Printer() {
-        var $content = document.getElementById('content');
+        let $content = document.getElementById('content');
+        let $form = document.getElementById('searchform');
+        let $site = $form['site'];
+        let $page = $form['page'];
 
         var tpl_results_recent = document.getElementById('tpl-results-recent');
         var tpl_results_search = document.getElementById('tpl-results-search');
@@ -310,6 +255,10 @@
         var tpl_url = document.getElementById('tpl-url');
         var tpl_date = document.getElementById('tpl-date');
         var tpl_pagination = document.getElementById('tpl-pagination');
+        var tpl_page_selected = document.getElementById('tpl-page-selected');
+        var tpl_page_number = document.getElementById('tpl-page-number');
+        var tpl_page_prev = document.getElementById('tpl-page-prev');
+        var tpl_page_next = document.getElementById('tpl-page-next');
 
         function get_node(tpl) {
             let $node = tpl.cloneNode(true);
@@ -330,12 +279,29 @@
         }
 
 
+        function get_page() {
+            let page = $page.value || 0;
+            try {
+                page = parseInt(page);
+                page -= 1;
+                if (page < 0)
+                    page = 0;
+            } catch(error) {
+                page = 0;
+            }
+
+            //todo clamp max page
+
+            console.log("page", page)
+            return page;
+        }
+
         function print_page_common($results, separator) {
             let $systems = get_node(tpl_systems);
             let $urls = get_node(tpl_urls);
             let $pagination = get_node(tpl_pagination);
             
-            let page = 0;
+            let page = get_page();
 
             fill_results_search($results, db.results);
             fill_systems($systems, db.subdomains);
@@ -352,36 +318,12 @@
         this.print_recent = function() {
             let $results = get_node(tpl_results_recent);
             print_page_common($results, true);
-            /*
-            fill_systems($systems, db.subdomains);
-            fill_urls($urls, db.results, 0, separation);
-
-            clean_page();
-            $content.appendChild($results);
-            $content.appendChild($systems);
-            $content.appendChild($urls);
-            */
         }
 
         this.print_search = function() {
             let $results = get_node(tpl_results_search);
             print_page_common($results, false);
             return;
-            /*
-            let $results = get_node(tpl_results_search);
-            let $systems = get_node(tpl_systems);
-            let $urls = get_node(tpl_urls);
-            let $pagination = get_node(tpl_pagination);
-
-            fill_results_search($results, db.results);
-            fill_systems($systems, db.subdomains);
-            fill_urls($urls, db.results, 0);
-
-            clean_page();
-            $content.appendChild($results);
-            $content.appendChild($systems);
-            $content.appendChild($urls);
-            */
         }
 
         function fill_results_search($results, results) {
@@ -393,7 +335,8 @@
         }
 
         function fill_systems($block, subdomains) {
-            Object.entries(db.subdomains)   // [key,val] array
+            let current = $site.value;
+            Object.entries(subdomains)   // [key,val] array
                 .sort((a, b) => {
                     return b[1] - a[1];     //sort by value (total sets)
                 })
@@ -407,6 +350,8 @@
 
                     $system.dataset.site = subdomain;
                     $system.textContent = sysname + ' · ' + total;
+                    if (current == subdomain)
+                        $system.classList.add('selected');
 
                     $block.appendChild($system);
                     $block.appendChild($blank); //nowrap oddities
@@ -415,7 +360,6 @@
         }
 
         function fill_urls($block, sets, page, separator) {
-
             let curr = page * PAGE_RESULTS;
             let max = curr + PAGE_RESULTS
             if (max > sets.length)
@@ -452,44 +396,165 @@
             }
         }
         
+       
         function fill_pagination($block, sets, page) {
-            if (sets.length > PAGE_RESULTS)
-                $block.textContent = `... (total ${sets.length})`;
-        }
+            let total = sets.length;
+            
+            let pages = parseInt(total / PAGE_RESULTS) + 1;
+            
+            let $selected = get_node(tpl_page_selected);
+            
+            $selected.textContent = page;
 
+            if (page > 0) {
+                let $prev = get_node(tpl_page_prev);
+                $prev.dataset.page = page + 1 - 1;
+                $block.appendChild($prev);
+            }
+            
+            let limit = pages;
+            if (limit > 10)
+                limit = 10;
+            //todo max N pages, then ... (last page)
+            
+            for (let i = 0; i < limit; i++) {
+                let $page;
+                if (i == page) {
+                    $page = get_node(tpl_page_selected);
+                }
+                else {
+                    $page = get_node(tpl_page_number);
+                }
+                $page.dataset.page = i + 1;
+                $page.textContent = i + 1;
+
+                $block.appendChild($page);
+            }
+            
+            if (page >= limit) {
+                $page = get_node(tpl_page_selected);
+                $page.dataset.page = page + 1;
+                $page.textContent = page + 1;
+                $block.appendChild($page);
+            }
+
+            if (page + 1 < pages) {
+                let $next = get_node(tpl_page_next);
+                $next.dataset.page = page + 1 + 1;
+                $block.appendChild($next);
+            }
+
+            //if (sets.length > PAGE_RESULTS)
+            //    $block.textContent = `... (total ${sets.length})`;
+        }
     }
 
     function Web() {
-        //add button functions
+        // add button functions
+        var $main = document.getElementById('main');
         var $form = document.getElementById('searchform');
-        
-        $form.addEventListener("submit", e => {
-            e.preventDefault()
+        let $text = $form['text'];
+        let $site = $form['site'];
+        let self = this;
 
-            this.show_search();
-        });
-        ld.setup();
-        
-        
-        this.show_recent = function() {
-            db.query_recent();
-            pt.print_recent();
-        }
-        
-        this.show_search = function() {
-            var text = $form['search'].value;
-            if (!text) {
-                this.show_recent();
+        // query on "[(system)]" click
+        $main.addEventListener('click', event => {
+            if (!event.target.matches('.sitetag'))
                 return;
+
+            let site = event.target.dataset.site;
+            if (site == $site.value)
+                site = '';
+            $site.value = site;
+
+            submit(event, this);
+            //$form.submit()
+        });
+
+        // search form
+        $form.addEventListener("submit", event => {
+            submit(event, this);
+        });
+
+        window.addEventListener('popstate', (event) => {
+            load_params();
+
+            // don't push state
+            this.show_results();
+        });
+
+        load_sets();
+
+        function submit(event, elem) {
+            let data = new FormData($form)
+            let params = new URLSearchParams(data);
+
+            // clean empty params
+            [...params.entries()].forEach(([key, value]) => {
+                if (!value) //0 or ''
+                    params.delete(key);
+            });
+
+            let url = params.toString()
+            url = `?${url}`; //force '?'
+            history.pushState(data, null, url);
+
+            elem.show_results();
+            event.preventDefault();
+        }
+
+        function load_params() {
+            $form.reset();
+            if (location.search) {
+                let params = new URLSearchParams(location.search);
+                for (let p of params.keys()) {
+                    if ($form[p])
+                        $form[p].value = params.get(p);
+                }
+            }
+        }
+
+        function get_query() {
+            let q = {
+                text: $text.value,
+                site: $site.value,
+                showRecent: false,
             }
 
-            db.query_search(text);
-            pt.print_search();
+            if (!q.text)
+                q.showRecent = true;
+            return q;
         }
+
+        this.show_results = function() {
+            let q = get_query();
+            db.query_search(q);
+
+            if (q.showRecent)
+                pt.print_recent();
+            else
+                pt.print_search();
+        }
+        
+        function load_sets() {
+            // get json with set info
+            // could save as localStorage, but some browsers limit max size and if
+            // json http cache is properly configured it shouldn't be redownloaded
+            fetch(SETS_URL)
+                .then(res => res.json())
+                .then(response => {
+                    db.init(response);
+                    load_params();
+                    self.show_results();
+                })
+                .catch(error => {
+                    console.error('Error:', error)
+                });
+        }
+
     }
 
     function main() {
-        ld = new Loader();
         db = new Database();
         pt = new Printer();
         wb = new Web();
