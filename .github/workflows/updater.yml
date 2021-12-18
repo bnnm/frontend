@@ -32,8 +32,8 @@ jobs:
         #wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
       run: |
         echo $(git log "$INDEX_JSON")
-        echo $(git log -skip 1 "$INDEX_JSON")
-        echo $(git log -skip 1 --pretty=format:%cI "$INDEX_JSON")
+        echo $(git log --skip 1 "$INDEX_JSON")
+        echo $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
         
 
         wget -q -O $INDEX_JSON $INFO_JSON_URL
