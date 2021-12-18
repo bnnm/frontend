@@ -22,7 +22,7 @@ jobs:
       with:
         fetch-depth: 0
         # get actual 
-        ref: ${{ github.event.pull_request.head.sha }}
+        #ref: ${{ github.event.pull_request.head.sha }}
     #    token: ${{ secrets.GITHUB_TOKEN }}
     # overwrite current file if newer and commit
     - name: Main
@@ -36,10 +36,12 @@ jobs:
         #touch -d $(git log --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
         #wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
       run: |
-        echo git log "$INDEX_JSON" $(git log "$INDEX_JSON")
-        echo git log --skip 1  $(git log --skip 1 )
-        echo git log --skip 1 "$INDEX_JSON" $(git log --skip 1 "$INDEX_JSON")
-        echo git log --skip 1 --pretty=format:%cI "$INDEX_JSON") $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
+        echo 1
+        echo $(git log "$INDEX_JSON")
+        echo 2
+        echo "$INDEX_JSON" $(git log --skip 1 "$INDEX_JSON")
+        echo 3
+        echo $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
         touch -d $(git log --skip 1 --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
         echo $(stat "$INDEX_JSON")
 
