@@ -25,16 +25,16 @@ jobs:
         INFO_JSON_URL: ${{ secrets.INFO_JSON_URL }}
         USER_MAIL: ${{ secrets.USER_MAIL }}
         USER_NAME: ${{ secrets.USER_NAME }}
-        INFO_JSON: index.json
+        INDEX_JSON: index.json
       # restore git's last mod date for index.json, otherwise --timestamp wouldn't work 
       # (files use git clone timestamp)
       run: |
-        touch -d $(git log --pretty=format:%cI -1 "$INFO_JSON") "$INFO_JSON"
-        wget -q --timestamp $INFO_JSON_URL
+        touch -d $(git log --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
+        echo $(stat "$INDEX_JSON")
+        wget --timestamp $INFO_JSON_URL
         git config --global user.email "$USER_MAIL"
         git config --global user.name "$USER_NAME"
-        git status
-        git add "$INFO_JSON"
+        git add "$INDEX_JSON"
         git commit -m "updated list"
         git push
-        exit 1
+        exit 0
