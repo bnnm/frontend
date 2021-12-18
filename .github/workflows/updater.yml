@@ -13,12 +13,14 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # ignore error when no changes
+    continue-on-error: true
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     # has default config, commit token, etc  (https://github.com/actions/checkout#usage)
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 3
+        fetch-depth: 0
     #    token: ${{ secrets.GITHUB_TOKEN }}
     # overwrite current file if newer and commit
     - name: Main
@@ -33,6 +35,7 @@ jobs:
         #wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
       run: |
         echo $(git log "$INDEX_JSON")
+        echo $(git log --skip 1 )
         echo $(git log --skip 1 "$INDEX_JSON")
         echo $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
         touch -d $(git log --skip 1 --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
@@ -45,4 +48,3 @@ jobs:
         git add "$INDEX_JSON"
         git commit -m "updated list"
         git push
-        exit 0
