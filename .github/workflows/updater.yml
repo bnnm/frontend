@@ -1,7 +1,7 @@
-# github workflow to automate builds
+# github workflow to update set list
 name: index.json updater
 
-# Controls when the action will run.
+# set comes from index.json, that is updated externally, so set a cron to check latest version every hour
 on:
   # every hour
   schedule:
@@ -13,40 +13,23 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    # ignore error when no changes
+
+    # ignore error that may be returned when no changes happen
     continue-on-error: true
+
     steps:
-    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    # has default config, commit token, etc  (https://github.com/actions/checkout#usage)
+
+    # default repo checks out with common config + token to commit
+    # see: https://github.com/actions/checkout#usage
     - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        # get actual 
-        #ref: ${{ github.event.pull_request.head.sha }}
-    #    token: ${{ secrets.GITHUB_TOKEN }}
-    # overwrite current file if newer and commit
+    #  with:
+    #    # default is 1, set 0 to download full repo instead of latest commit only
+    #    fetch-depth: 0
+
+    # overwrite current .json file if newer and commit
     - name: Main
       env:
         INFO_JSON_URL: ${{ secrets.INFO_JSON_URL }}
         USER_MAIL: ${{ secrets.USER_MAIL }}
         USER_NAME: ${{ secrets.USER_NAME }}
-        INDEX_JSON: index.json
-      # restore git's last mod date for index.json, otherwise --timestamp won't work
-        # TODO: not working, git log returns current (clone?) date
-        #touch -d $(git log --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
-        #wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
-        #wget -q -O $INDEX_JSON $INFO_JSON_URL
-        #echo $(stat "$INDEX_JSON")
-      run: |
-        echo last "$INDEX_JSON" commit: $(git log "$INDEX_JSON")
-        echo last "$INDEX_JSON" commit: $(git log --pretty=format:%cI "$INDEX_JSON")
-        
-        touch -am -c -d $(git log --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
-
-        wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
-
-        git config --global user.email "$USER_MAIL"
-        git config --global user.name "$USER_NAME"
-        git add "$INDEX_JSON"
-        git commit -m "updated list"
-        git push
+      run: sh .updater.sh $INFO_JSON_URL $USER_MAIL $USER_NAME

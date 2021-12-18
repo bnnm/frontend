@@ -4,3 +4,4 @@
 !.github
 *.dll
 *.exe
+!.updater.sh
