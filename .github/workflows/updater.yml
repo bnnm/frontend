@@ -20,7 +20,7 @@ jobs:
     # has default config, commit token, etc  (https://github.com/actions/checkout#usage)
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 1
+        fetch-depth: 0
         # get actual 
         #ref: ${{ github.event.pull_request.head.sha }}
     #    token: ${{ secrets.GITHUB_TOKEN }}
