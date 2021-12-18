@@ -17,15 +17,15 @@ jobs:
     - uses: actions/checkout@v2
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        json_url: ${{ secrets.INFO_JSON_URL }}
-        user_mail: ${{ secrets.USER_MAIL }}
-        user_name: ${{ secrets.USER_NAME }}
-        
     # overwrite current file if newer and commit
     - name: Main
+      env:
+        INFO_JSON_URL: ${{ secrets.INFO_JSON_URL }}
+        USER_MAIL: ${{ secrets.USER_MAIL }}
+        USER_NAME: ${{ secrets.USER_NAME }}
       run: |
-        wget -q --timestamp $INPUT_JSON_URL
-        git config --global user.email "$INPUT_USER_MAIL"
+        wget -q --timestamp $INFO_JSON_URL
+        git config --global user.email "$USER_MAIL"
         git config --global user.name "$INPUT_USER_NAME"
         git add index.json
         git commit -m "updated list"
