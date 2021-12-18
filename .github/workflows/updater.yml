@@ -9,16 +9,14 @@ on:
 
   # manual
   workflow_dispatch:
-
+  
 jobs:
   build:
-    name: Update
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
       with:
-        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     # overwrite current file if newer and commit
     - name: Main
