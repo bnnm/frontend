@@ -14,9 +14,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
     - uses: actions/checkout@v2
-      #with:
-      #  token: ${{ secrets.GITHUB_TOKEN }}
+    #  with:
+    #    token: ${{ secrets.GITHUB_TOKEN }}
     # overwrite current file if newer and commit
     - name: Main
       env:
@@ -26,7 +27,7 @@ jobs:
       run: |
         wget -q --timestamp $INFO_JSON_URL
         git config --global user.email "$USER_MAIL"
-        git config --global user.name "$INPUT_USER_NAME"
+        git config --global user.name "$USER_NAME"
         git add index.json
         git commit -m "updated list"
         git push
