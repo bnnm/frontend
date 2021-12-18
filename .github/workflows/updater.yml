@@ -27,10 +27,10 @@ jobs:
         USER_NAME: ${{ secrets.USER_NAME }}
         INDEX_JSON: index.json
       # restore git's last mod date for index.json, otherwise --timestamp won't work
-      run: |
         # TODO: not working, git log returns current (clone?) date
         #touch -d $(git log --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
         #wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
+      run: |
         echo $(git log "$INDEX_JSON")
         echo $(git log -skip 1 "$INDEX_JSON")
         echo $(git log -skip 1 --pretty=format:%cI "$INDEX_JSON")
