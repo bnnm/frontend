@@ -2,3 +2,5 @@
 !/.gitignore
 !.gitattributes
 !.github
+*.dll
+*.exe

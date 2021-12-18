@@ -23,6 +23,10 @@ jobs:
     # overwrite current file if newer and commit
     - name: Main
       run: |
-        wget --timestamp ${{ secrets.INFO_JSON_URL }}
-        git commit -am "updated list"
+        wget -q --timestamp ${{ secrets.INFO_JSON_URL }}
+
+        git config --global user.email "${{ secrets.USER_MAIL }}"
+        git config --global user.name "${{ secrets.USER_NAME }}"
+        git add index.json
+        git commit -m "updated list"
         git push
