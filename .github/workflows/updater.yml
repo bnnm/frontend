@@ -34,7 +34,7 @@ jobs:
         echo $(git log HEAD --pretty=format:%cI -- "$INDEX_JSON")
         echo $(git log HEAD --pretty=format:%cI -- $INDEX_JSON)
         echo $(stat "$INDEX_JSON")
-        wget $INFO_JSON_URL
+        wget -O $INDEX_JSON $INFO_JSON_URL
         git config --global user.email "$USER_MAIL"
         git config --global user.name "$USER_NAME"
         git add "$INDEX_JSON"
