@@ -15,9 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-    # has default config, commit token, etc
+    # has default config, commit token, etc  (https://github.com/actions/checkout#usage)
     - uses: actions/checkout@v2
-    #  with:
+      with:
+        fetch-depth: 3
     #    token: ${{ secrets.GITHUB_TOKEN }}
     # overwrite current file if newer and commit
     - name: Main
@@ -34,7 +35,9 @@ jobs:
         echo $(git log "$INDEX_JSON")
         echo $(git log --skip 1 "$INDEX_JSON")
         echo $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
-        
+        touch -d $(git log --skip 1 --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
+        echo $(stat "$INDEX_JSON")
+
 
         wget -q -O $INDEX_JSON $INFO_JSON_URL
         git config --global user.email "$USER_MAIL"
