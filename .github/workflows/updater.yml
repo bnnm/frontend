@@ -15,6 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    # has default config, commit token, etc
     - uses: actions/checkout@v2
     #  with:
     #    token: ${{ secrets.GITHUB_TOKEN }}
@@ -25,9 +26,10 @@ jobs:
         USER_MAIL: ${{ secrets.USER_MAIL }}
         USER_NAME: ${{ secrets.USER_NAME }}
       run: |
-        wget -q --timestamp $INFO_JSON_URL
+        wget --timestamp $INFO_JSON_URL
         git config --global user.email "$USER_MAIL"
         git config --global user.name "$USER_NAME"
+        git status
         git add index.json
         git commit -m "updated list"
         git push
