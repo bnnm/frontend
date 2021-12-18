@@ -1,0 +1,28 @@
+# github workflow to automate builds
+name: index.json updater
+
+# Controls when the action will run.
+on:
+  # every hour
+  schedule:
+  - cron: '0 0-23 * * *'
+
+  # manual
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Update
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+
+    # overwrite current file if newer and commit
+    - name: Main
+      run: |
+        wget --timestamp ${{ secrets.INFO_JSON_URL }}
+        git commit -am "updated list"
+        git push
