@@ -20,7 +20,7 @@ jobs:
     # has default config, commit token, etc  (https://github.com/actions/checkout#usage)
     - uses: actions/checkout@v2
       with:
-        fetch-depth: 0
+        fetch-depth: 1
         # get actual 
         #ref: ${{ github.event.pull_request.head.sha }}
     #    token: ${{ secrets.GITHUB_TOKEN }}
@@ -39,10 +39,10 @@ jobs:
         echo 1
         echo $(git log "$INDEX_JSON")
         echo 2
-        echo "$INDEX_JSON" $(git log --skip 1 "$INDEX_JSON")
+        echo $(git log --skip 1 "$INDEX_JSON")
         echo 3
         echo $(git log --skip 1 --pretty=format:%cI "$INDEX_JSON")
-        touch -d $(git log --skip 1 --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
+        touch -am -c -d $(git log --skip 1 --pretty=format:%cI -1 "$INDEX_JSON") "$INDEX_JSON"
         echo $(stat "$INDEX_JSON")
 
 
