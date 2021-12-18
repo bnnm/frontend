@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
+      #with:
+      #  token: ${{ secrets.GITHUB_TOKEN }}
     # overwrite current file if newer and commit
     - name: Main
       env:
