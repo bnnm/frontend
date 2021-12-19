@@ -465,7 +465,12 @@
         let $page = $form['page'];
         let self = this;
 
-        // query on "[(system)]" click
+        // testing
+        $banana.addEventListener('click', event => {
+            document.body.classList.toggle('banana')
+        });
+
+        // tag, pagination
         $main.addEventListener('click', event => {
             if (!event.target.matches('[data-site], [data-page]'))
                 return;
@@ -486,11 +491,6 @@
             submit();
             //$form.submit() //todo dispatchEvent (no validation), onclick, requestSubmit (no safari)
         });
-
-        $banana.addEventListener('click', event => {
-            document.body.classList.toggle('banana')
-        });
-
 
         // search form
         $form.addEventListener('submit', event => {

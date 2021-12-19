@@ -1,3 +1,4 @@
+html { overflow-y: scroll; }
 body {
     line-height: 1.3em;
     margin: .5em;
@@ -5,40 +6,29 @@ body {
     background-color:#ffffffff;
 }
 
-#banana { cursor: pointer; }
+h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0; }
 
-.banana { background-color:#ffec04; }
-.banana a { color:#3c7f9c; }
+#banana { cursor: pointer; }
+.banana h1 { background-color:#ffec04;  outline: 1px solid #3c7f9c; border-radius: 5px; }
+.banana a { color:rgb(9, 105, 218); font-family: Helvetica, Arial, sans-serif; _font-size:0.9em; }
 .banana .systems,
 .banana .pagination { user-select: none; }
+#banana:hover { animation: rotating 2s linear infinite; transform-origin: 50% 50%; animation-delay: 1s; }
 
 
-h1 {
-    font-size: 1em;
-    font-weight: normal;
-    margin: 0; padding: 0;
-}
-
-a { 
-    color: #0000EE; cursor: pointer; text-decoration: none;
-}
+a { color: #0000EE; cursor: pointer; text-decoration: none; }
 a:hover { text-decoration: underline; }
-
-.urls {
-    line-height: 1.5em;
-}
-
-.info { color: #666; }
-
-a:visited {
-    color: #551A8B;
-}
+a:visited { color: #551A8B; }
 
 .tpl { display:none; }
 
 .header { margin-bottom: 1em; }
 .head { display:inline-block; }
+
 .links { float: right; }
+.links a:visited { color:#0000EE; }
+
+.info { color: #666; }
 
 .results {
     margin: 1em 0 1.3em 0;
@@ -73,6 +63,10 @@ a:visited {
 
 .dupes {
     display: none;
+}
+
+.urls {
+    line-height: 1.5em;
 }
 
 .pagination { margin: 2em 0em 1em 0em; }

@@ -27,18 +27,21 @@ VERSION=$(cat $INDEX_VERSION)
 #VERSION=$(git log --pretty=format:%cI "$INDEX_JSON")
 
 touch -am -c -d $VERSION "$INDEX_JSON"
-echo "$VERSION"
+#echo "$VERSION"
 
 wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
 
 
 CHANGED=$(git diff --name-only --exit-code $INDEX_JSON)
 if [ "$CHANGED" != "$INDEX_JSON" ]; then
-    echo "$INDEX_JSON: no change"
+    echo "$INDEX_JSON: no change (old date: $VERSION)"
     exit 0
 fi
 
-echo "$INDEX_JSON: updated"
+# get current date = version and overwrite file
+NEW_VERSION=$(date +%Y-%m-%dT%T%z)
+
+echo "$INDEX_JSON: updated (old: $VERSION, new: $NEW_VERSION)"
 
 # may be needed by github actions
 if [ ! -z "$USER_MAIL" ]; then
@@ -48,8 +51,6 @@ if [ ! -z "$USER_NAME" ]; then
     git config user.name "$USER_NAME"
 fi
 
-# get current date = version and overwrite file
-NEW_VERSION=$(date +%Y-%m-%dT%T%z)
 echo $NEW_VERSION > $INDEX_VERSION
 
 # update changed files (if they actually changed)
