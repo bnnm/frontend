@@ -165,7 +165,7 @@
         }
 
         query_filelist(id) {
-            this.filelist = this._filelists[id];
+            this.filelist = this._filelists[id] || null;
         }
 
         _is_match_term(terms, set) {
@@ -631,6 +631,7 @@
                 $fset.value = set;
             }
 
+            update_url();
             submit();
             //$form.submit() //todo dispatchEvent (no validation), onclick, requestSubmit (no safari)
         });
@@ -641,15 +642,14 @@
             $fpage.value = '';
             $fset.value = '';
 
+            update_url();
             submit(true);
             event.preventDefault();
         });
 
         window.addEventListener('popstate', (event) => {
             load_params();
-
-            // don't submit/push state
-            show_results();
+            submit();
 
             //TODO not current
             //console.log("pop", event.state, event.state.curr_x, event.state.curr_y);
@@ -661,10 +661,8 @@
         load_sets();
 
         function submit(direct_submit) {
-            update_url();
-            let set = $fset.value;
-            
             // clicking on set icon = only show set, reading from URL = show both
+            let set = $fset.value;
             if (!set || direct_submit)
                 show_results();
             if (set)
@@ -672,9 +670,9 @@
         }
 
         function submit_set() {
-            let setid = $fset.value;
+            let setId = $fset.value;
 
-            db.query_set_by_id(setid)
+            db.query_set_by_id(setId)
             let set = db.set;
             //if (!set) ???
 
@@ -698,7 +696,7 @@
                     params.delete(key);
             });
 
-            let state =  {
+            let state = {
                 //curr_x: 0, //window.pageXOffset,
                 //curr_y: document.body.offsetTop //window.pageYOffset,
             }
@@ -733,7 +731,8 @@
                 .then((response) => {
                     db.init(response);
                     load_params();
-                    show_results();
+                    //show_results();
+                    submit(true);
                 })
                 .catch((error) => {
                     console.error('Error:', error);

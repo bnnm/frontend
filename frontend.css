@@ -60,10 +60,12 @@ a:visited { color: #551A8B; }
     cursor: pointer;
 }
 .tag.selected { color:#000; outline: 1px solid red; }
+.extension { cursor:default; }
 
 .type {
     color: #666; border: 1px solid #999; padding: 2px 2px 0; margin: 0 2px;
     border-radius: 0.5em; font-size: smaller; white-space: nowrap; background-color:#ffffffff;
+    cursor:default; 
 }
 .type.nonsolid { outline:1px solid green; }
 .type.solid { outline:1px solid blue; }
@@ -103,7 +105,7 @@ a:visited { color: #551A8B; }
 .filelist {
     position: fixed; width: 100vx; height: 100vh; top: 0; left: 0; right: 0; bottom: 0;
     background-color: rgba(0,0,0,0.25);
-    overflow:hidden;
+    overflow:auto;
 }
 .filelist-main {
     z-index: 2;
