@@ -1,5 +1,6 @@
 html { overflow-y: scroll; }
 body {
+    font-family: serif;
     line-height: 1.3em;
     margin: .5em;
     padding: 0;
@@ -8,12 +9,17 @@ body {
 
 h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0; }
 
-#banana { cursor: pointer; }
-.banana h1 { background-color:#ffec04;  outline: 1px solid #3c7f9c; border-radius: 5px; }
-.banana a { color:rgb(9, 105, 218); font-family: Helvetica, Arial, sans-serif; _font-size:0.9em; }
+#banana { cursor: pointer; display:inline-block;  }
+.banana { font-family: sans-serif; font-size:0.95em;  }
+.banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; font-family: serif; font-size: initial; }
+.banana a { color:rgb(9, 105, 218); font-family: sans-serif; font-size:0.95em; }
 .banana .systems,
 .banana .pagination { user-select: none; }
-#banana:hover { animation: rotating 2s linear infinite; transform-origin: 50% 50%; animation-delay: 1s; }
+#banana:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
 
 a { color: #0000EE; cursor: pointer; text-decoration: none; }
@@ -84,3 +90,27 @@ a:visited { color: #551A8B; }
     background-color: #f5f5f5;
     text-decoration: none;
 }        
+
+
+.filelist {
+    position: fixed; width: 100vx; height: 100vh; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0,0,0,0.25);
+}
+.filelist-main {
+    z-index: 2;
+    background-color: #ffffff; border: 2px solid #ddd; border-radius: 10px;
+    margin: 1em; padding: 0 1em 1em 1em;
+}
+.filelist-main ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 0 0 1em;
+    font-family: monospace;
+    font-size: 1.25em;
+}
+
+.filelist-back { font-weight: bold; cursor: pointer; display: block; border-bottom: 1px solid #ccc; }
+.filelist-back::before { content:'⏎'; font-size:0.90em; }
+.filelist-main .error { color:red; }
+
+body.overlayed {  position:fixed; /* remove scroll */ }

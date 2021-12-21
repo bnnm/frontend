@@ -3,6 +3,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
     <title>joshw frontend</title>
     <!--<link rel="search" type="application/opensearchdescription+xml" title="vgm.hcs64.com" href="opensearch.xml">-->
     <link href="frontend.css" rel="stylesheet" type="text/css">
@@ -26,8 +27,8 @@
         <input name="text" placeholder="Go ahead, search away!" type="search" tabindex="1" autocomplete="off">
         <input type="hidden" name="site"/>
         <input type="hidden" name="page"/>
-        <!--
         <input type="hidden" name="set"/>
+        <!--
         <input type="hidden" name="tags"/>
         -->
         <input type="submit" value="Go">
@@ -68,7 +69,7 @@
             <a href=""></a>
             <span class="sitetag tag" data-site=""></span>
             <small class="info"></small>
-            <span class="showset tag" data-set="" title="show details" style="display:none;">···</span>
+            <span class="showset tag" data-set="" title="show details">···</span>
         </div>
 
         <div id="tpl-pagination" class="pagination">
@@ -78,6 +79,38 @@
         <a id="tpl-page-prev" class="page-prev" data-page="">prev</a>
         <a id="tpl-page-next" class="page-next" data-page="">next</a>
         <span id="tpl-page-more">...</span>
+
+        <div id="tpl-filelist" class="filelist">
+        </div>
+
+        <div id="tpl-filelist-main" class="filelist-main">
+            <div class="filelist-back">
+                Back
+            </div>
+            <p>
+                Details for <a href=""></a> <small class="info"></small>
+            </p>
+        </div>
+
+        <div id="tpl-filelist-info">
+            <p>
+                Extensions: <span class="extensions"><span>
+                
+            </p>
+            <p>
+                <span class="total"></span> files contained in this set:
+            </p>
+            <ul></ul>
+        </div>
+
+        <li id="tpl-filelist-item">
+            <span class="name"></span>
+            <small class="info"></small>
+        </li>
+
+        <div id="tpl-filelist-error" class="error">
+            Couldn't load list, try again later :(
+        </div>
     </div>
 
     <script src="frontend.js"></script>

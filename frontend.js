@@ -52,18 +52,43 @@
 
         init(sets) {
             this._sets = sets;
+            this._map = new Map(); //int key
 
             this._prepare_sets();
             this.query_empty();
+        }
+        
+        init_filelist(filelist) {
+            this.filelist = filelist;
+            
+            this.filelist.extensions = [];
+            for (let file of filelist.files) {
+                this._load_sizeview(file);
+                
+                //todo subdomain + amiga
+                //let pos = file.name.lastIndexOf('.');
+                //if (pos.)
+                //let extension 
+                //file.name.
+            }
         }
 
         _prepare_sets() {
             this._sets.forEach(set => {
                 this._load_basename(set);
+                this._load_inode(set);
                 this._load_sizeview(set);
                 this._load_url(set);
                 this._load_date(set);
             });
+        }
+
+        _load_inode(set) {
+            if (set.basename_lw.endsWith('.7z') || set.basename_lw.endsWith('.zip')) {
+                this._map[set.inode] = set;
+            } else {
+                this.inode = null;
+            }
         }
 
         _load_basename(set) {
@@ -76,20 +101,26 @@
         }
 
         _load_sizeview(set) {
-            let size = set.size / 1024; // default in KB
+            let size = set.size;
             let type = '';
 
             if (size < 1000) {
-                type = 'KB';
+                type = 'B';
             }
             else {
-                size = size / 1024;
+                size = set.size / 1024;
                 if (size < 1000) {
-                    type = 'MB';
+                    type = 'KB';
                 }
                 else {
                     size = size / 1024;
-                    type = 'GB';
+                    if (size < 1000) {
+                        type = 'MB';
+                    }
+                    else {
+                        size = size / 1024;
+                        type = 'GB';
+                    }
                 }
             }
 
@@ -111,21 +142,22 @@
             set.date = date;
         }
 
+        
+
         query_empty() {
             this.results = [];
             this.subdomains = {};
+            this.set = null;
+            this.filelist = null;
         }
 
-        query_recent() {
-            this.results = this._sets;
-            this.subdomains = {};
+        query_set_by_id(id) {
+            this.set = this._map[id] || null;
+        }
 
-            this._sets.forEach(set => {
-                this._load_subdomain(set);
-            });
-
-            this._sort_results(true);
-            this._sort_subdomains();
+        query_filelist(id) {
+            //implicit, we only save one set
+            //this.filelist = this._filelist;
         }
 
         _is_match_term(terms, set) {
@@ -245,8 +277,8 @@
     function Printer() {
         let $content = $_id('content');
         let $form = $_id('searchform');
-        let $site = $form['site'];
-        let $page = $form['page'];
+        let $fsite = $form['site'];
+        let $fpage = $form['page'];
 
         var tpl_results_recent = $_id('tpl-results-recent');
         var tpl_results_search = $_id('tpl-results-search');
@@ -260,6 +292,11 @@
         var tpl_page_prev = $_id('tpl-page-prev');
         var tpl_page_next = $_id('tpl-page-next');
         var tpl_page_more = $_id('tpl-page-more');
+        var tpl_filelist = $_id('tpl-filelist');
+        var tpl_filelist_main = $_id('tpl-filelist-main');
+        var tpl_filelist_info = $_id('tpl-filelist-info');
+        var tpl_filelist_item = $_id('tpl-filelist-item');
+        var tpl_filelist_error = $_id('tpl-filelist-error');
 
         function get_node(tpl) {
             let $node = tpl.cloneNode(true);
@@ -278,10 +315,15 @@
             $content.parentNode.replaceChild($content_new, $content);
             $content = $content_new;
         }
-
+        
+        function clean_overlay() {
+            let $overlay = document.getElementById('overlay');
+            if ($overlay)
+                $overlay.remove();
+        }
 
         function get_page(sets) {
-            let page = $page.value || 0;
+            let page = $fpage.value || 0;
             try {
                 page = parseInt(page);
                 page -= 1;
@@ -329,7 +371,16 @@
         this.print_search = function () {
             let $results = get_node(tpl_results_search);
             print_page_common($results, false);
-            return;
+        }
+
+        this.print_filelist = function () {
+            let $filelist = get_node(tpl_filelist);
+            $filelist.id = 'overlay';
+
+            fill_filelist($filelist, db.set, db.filelist);
+
+            clean_overlay();
+            $content.appendChild($filelist);
         }
 
         function fill_results_search($results, results) {
@@ -341,7 +392,7 @@
         }
 
         function fill_systems($block, subdomains) {
-            let current = $site.value;
+            let current = $fsite.value;
             Object.entries(subdomains)   // [key,val] array
                 .sort((a, b) => {
                     return b[1] - a[1];     //sort by value (total sets)
@@ -376,7 +427,7 @@
             for (let i = curr; i < max; i++) {
                 let set = sets[i];
                 let $url = get_node(tpl_url);
-                
+
                 if (separator && curr_date != set.date) {
                     curr_date = set.date;
                     let $date = get_node(tpl_date);
@@ -398,10 +449,16 @@
                 let $info = $url.getElementsByClassName('info')[0];
                 $info.textContent = `${set.sizeview} ${set.modified}`;
 
+                let $set = $url.getElementsByClassName('showset')[0];
+                if (set.inode) {
+                    $set.dataset.set = set.inode;
+                } else {
+                    $set.remove();
+                }
+
                 $block.appendChild($url);
             }
         }
-        
        
         function fill_pagination($block, sets, page) {
             let total = sets.length;
@@ -454,38 +511,92 @@
             $next.classList.toggle('disabled', page + 1 >= pages);
             $block.appendChild($next);
         }
+
+        // {"type": "7z", "size": 1213797, "method": "LZMA2:1536k", "solid": true, "files": [
+        //   {"name": "name.ext", "size": 123, "time": "2011-06-03 05:40:56", "crc": "F5E2CDC0"}, 
+        // ]
+        function fill_filelist($block, set, filelist) {
+            let $main = get_node(tpl_filelist_main);
+
+            let $link = $main.getElementsByTagName('a')[0];
+            $link.href = set.url;
+            $link.textContent = set.basename;
+
+            let $info = $main.getElementsByClassName('info')[0];
+            $info.textContent = `${set.sizeview} ${set.modified}`;
+
+            if (!filelist) {
+                let $error = get_node(tpl_filelist_error);
+                $main.appendChild($error);
+            }
+            else {
+                let $info = get_node(tpl_filelist_info);
+                
+                //filelist.solid, filelist.method;)
+                
+                let extensions = filelist.extensions;
+
+                let $total = $info.getElementsByClassName('total')[0];
+                $total.textContent = `${filelist.files.length}`;
+
+                let $list = $info.getElementsByTagName('ul')[0];
+                for (let file of filelist.files) {
+                    let $item = get_node(tpl_filelist_item);
+                    let $name = $item.getElementsByClassName('name')[0];
+                    let $info = $item.getElementsByClassName('info')[0];
+
+                    $name.textContent = `${file.name}`;
+                    $info.textContent = `${file.sizeview}`;
+                    $list.appendChild($item);
+                }
+                $main.appendChild($info);
+            }
+
+            $block.appendChild($main);
+        }
     }
 
     function Web() {
         let $banana = $_id('banana');
         let $main = $_id('main');
         let $form = $_id('searchform');
-        let $text = $form['text'];
-        let $site = $form['site'];
-        let $page = $form['page'];
+        let $ftext = $form['text'];
+        let $fsite = $form['site'];
+        let $fpage = $form['page'];
+        let $fset  = $form['set'];
         let self = this;
 
         // testing
-        $banana.addEventListener('click', event => {
+        $banana.addEventListener('click', (event) => {
             document.body.classList.toggle('banana')
         });
 
         // tag, pagination
-        $main.addEventListener('click', event => {
-            if (!event.target.matches('[data-site], [data-page]'))
+        $main.addEventListener('click', (event) => {
+            if (!event.target.matches('[data-site], [data-page], [data-set]'))
                 return;
+            let ds = event.target.dataset;
 
-            let site = event.target.dataset.site;
+            //todo call reset function
+            $fset.value = '';
+
+            let site = ds.site;
             if (site !== undefined) {
-                if (site === $site.value)
+                if (site === $fsite.value)
                     site = '';
-                $site.value = site;
+                $fpage.value = '';
+                $fsite.value = site;
             }
 
-            let page = event.target.dataset.page;
+            let page = ds.page;
             if (page !== undefined) {
-                $page.value = page;
+                $fpage.value = page;
                 window.scroll(0,0);
+            }
+
+            let set = ds.set;
+            if (set !== undefined) {
+                $fset.value = set;
             }
 
             submit();
@@ -493,9 +604,12 @@
         });
 
         // search form
-        $form.addEventListener('submit', event => {
-            $page.value = ''; //always reset pages when searching via form submit
-            submit();
+        $form.addEventListener('submit', (event) => {
+            //always reset some values when searching via form submit
+            $fpage.value = '';
+            $fset.value = '';
+
+            submit(true);
             event.preventDefault();
         });
 
@@ -506,9 +620,33 @@
             show_results();
         });
 
+
         load_sets();
 
-        function submit() {
+        function submit(direct_submit) {
+            update_url();
+            let set = $fset.value;
+            
+            // clicking on set icon = only show set, reading from URL = show both
+            if (!set || direct_submit)
+                show_results();
+            if (set)
+                submit_set();
+        }
+
+        function submit_set() {
+            let setid = $fset.value;
+
+            db.query_set_by_id(setid)
+            let set = db.set;
+
+            //if (!set) ???
+
+            let url = `./filelists/${set.subdomain}/${set.name}.json`;
+            load_set(url);
+        }
+        
+        function update_url() {
             let data = new FormData($form)
             let params = new URLSearchParams(data);
 
@@ -521,15 +659,14 @@
             let url = params.toString()
             url = `?${url}`; //force '?'
             history.pushState(data, null, url);
-
-            show_results();
         }
 
         function load_params() {
             //$form.reset(); //no good in hidden fields
-            $text.value = '';
-            $site.value = '';
-            $page.value = '';
+            $ftext.value = '';
+            $fsite.value = '';
+            $fpage.value = '';
+            $fset.value = '';
 
             if (location.search) {
                 let params = new URLSearchParams(location.search);
@@ -540,10 +677,40 @@
             }
         }
 
+        function load_sets() {
+            // get json with set info
+            // could save as localStorage, but some browsers limit max size and if
+            // json http cache is properly configured it shouldn't be redownloaded
+            fetch(SETS_URL)
+                .then((res) => res.json())
+                .then((response) => {
+                    db.init(response);
+                    load_params();
+                    show_results();
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function load_set(url) {
+            // get json with single set info
+            fetch(url)
+                .then((res) => res.json())
+                .then((response) => {
+                    db.init_filelist(response);
+                    show_filelist();
+                })
+                .catch((error) => {
+                    //console.error('Error:', error);
+                    show_filelist();
+                });
+        }
+        
         function get_query() {
             let q = {
-                text: $text.value,
-                site: $site.value,
+                text: $ftext.value,
+                site: $fsite.value,
                 showRecent: false,
             }
 
@@ -562,22 +729,47 @@
                 pt.print_search();
         }
 
-        function load_sets() {
-            // get json with set info
-            // could save as localStorage, but some browsers limit max size and if
-            // json http cache is properly configured it shouldn't be redownloaded
-            fetch(SETS_URL)
-                .then(res => res.json())
-                .then(response => {
-                    db.init(response);
-                    load_params();
-                    show_results();
-                })
-                .catch(error => {
-                    console.error('Error:', error)
-                });
+        function show_filelist() {
+            let q = $fset.value;
+            db.query_filelist(q);
+
+            pt.print_filelist();
+            
+            open_overlay();
         }
 
+
+        function open_overlay() {
+            let $overlay = $_id('overlay');
+
+            document.body.classList.add('overlayed');
+            $overlay.addEventListener('click', (event) => {
+                if (!event.target.matches('.filelist-back'))
+                    return;
+                close_overlay();
+            });
+
+            document.addEventListener('keydown', handle_escape);
+        }
+
+        function handle_escape(event) {
+            if (event.key === "Escape" || event.key === "Esc") {
+                close_overlay();
+            }
+        }
+
+        function close_overlay() {
+            let $overlay = $_id('overlay');
+            if (!$overlay)
+                return;
+
+            document.body.classList.remove('overlayed');
+            $overlay.remove();
+            $fset.value = '';
+            update_url();
+
+            document.removeEventListener('keydown', handle_escape);
+        }
     }
 
     function main() {
