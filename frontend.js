@@ -2,6 +2,7 @@
     "use strict";
     const $_id = (id) => document.getElementById(id);
     const $_cl = (node, className) => node.getElementsByClassName(className)[0];
+    const SET_FORCE_RELOAD = true;
     const SETS_URL = 'index.json';
     const PAGE_RESULTS = 100;
     const SYSTEM_CONFIG = {
@@ -61,19 +62,27 @@
         }
         
         init_filelist(set, filelist) {
-            this._filelists[set.inode] = filelist
-            
+            //TODO: evict older sets
+            this._filelists[set.inode] = filelist;
+
+            let crcs = new Set();
             filelist.extensions = [];
             for (let file of filelist.files) {
                 this._load_sizeview(file);
 
                 //todo subdomain + amiga > ignore
                 let pos = file.name.lastIndexOf('.');
-                let ext = ''
+                let ext = '';
                 if (pos >= 0)
                     ext = file.name.substring(pos + 1);
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
+
+                if (crcs.has(file.crc))
+                    file.dupe = true;
+                else
+                    crcs.add(file.crc);
+                console.log(file.crc)
             }
         }
 
@@ -238,12 +247,14 @@
                 if (term_ok && site_ok) {
                     this.results.push(set);
                 }
-                if (term_ok && site_ok || q.showRecent) {
+                
+                // adding site_ok will hide other subdomains
+                if (term_ok /*&& site_ok*/ || q.showRecent) {
                     this._load_subdomain(set);
                 }
             });
 
-            // should always include current
+            // should always include current (if it's an actual system)
             if (q.site && !this.subdomains[q.site])
                 this.subdomains[q.site] = 0;
 
@@ -579,6 +590,9 @@
 
                     $name.textContent = `${file.name}`;
                     $info.textContent = `${file.sizeview}`;
+
+                    if (file.dupe)
+                       $item.classList.add('dupe');
                     $list.appendChild($item);
                 }
                 $main.appendChild($info);
@@ -682,6 +696,8 @@
             }
             else {
                 let url = `./filelists/${set.subdomain}/${set.name}.json`;
+                if (SET_FORCE_RELOAD)
+                    url += '?' + Math.random();
                 load_filelist(set, url);
             }
         }

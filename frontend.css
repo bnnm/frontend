@@ -59,6 +59,7 @@ a:visited { color: #551A8B; }
     background-color:#ffffffff;
     cursor: pointer;
 }
+.tag:hover { outline: 1px solid #b2dcf9; }
 .tag.selected { color:#000; outline: 1px solid red; }
 .extension { cursor:default; }
 
@@ -71,7 +72,7 @@ a:visited { color: #551A8B; }
 .type.solid { outline:1px solid blue; }
 
 .showset {
-    cursor: pointer; margin: 0 5px;
+    cursor: pointer; margin: 0 5px; padding: 0 3px;
 }
 
 .date { font-size: smaller; margin: 1em 1em 0.5em; }
@@ -125,3 +126,5 @@ a:visited { color: #551A8B; }
 .filelist-main .error { color:red; }
 
 body.overlayed { overflow:hidden; /* remove scroll */ }
+
+.dupe::after { content:'dupe!'; color:#09a0a0; line-height: 1em; font-size:0.85em; }
