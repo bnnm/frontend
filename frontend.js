@@ -1,6 +1,7 @@
 (function () {
     "use strict";
     const $_id = (id) => document.getElementById(id);
+    const $_cl = (node, className) => node.getElementsByClassName(className)[0];
     const SETS_URL = 'index.json';
     const PAGE_RESULTS = 100;
     const SYSTEM_CONFIG = {
@@ -52,24 +53,27 @@
 
         init(sets) {
             this._sets = sets;
-            this._map = new Map(); //int key
+            this._setsById = new Map(); //int inode
+            this._filelists = new Map(); //same
 
             this._prepare_sets();
             this.query_empty();
         }
         
-        init_filelist(filelist) {
-            this.filelist = filelist;
+        init_filelist(set, filelist) {
+            this._filelists[set.inode] = filelist
             
-            this.filelist.extensions = [];
+            filelist.extensions = [];
             for (let file of filelist.files) {
                 this._load_sizeview(file);
-                
-                //todo subdomain + amiga
-                //let pos = file.name.lastIndexOf('.');
-                //if (pos.)
-                //let extension 
-                //file.name.
+
+                //todo subdomain + amiga > ignore
+                let pos = file.name.lastIndexOf('.');
+                let ext = ''
+                if (pos >= 0)
+                    ext = file.name.substring(pos + 1);
+                if (!filelist.extensions.includes(ext))
+                    filelist.extensions.push(ext);
             }
         }
 
@@ -80,12 +84,17 @@
                 this._load_sizeview(set);
                 this._load_url(set);
                 this._load_date(set);
+
+                // input JSON is untrusted data, but we manually control href's start (always http... so "javascript:..."
+                // isn't possible), and all text is written with textContent and not innerHTML (can't trigger scripts),
+                // thus should be safe to use strings as-is without XSS (hopefully)
+                //this._escape(set);
             });
         }
 
         _load_inode(set) {
             if (set.basename_lw.endsWith('.7z') || set.basename_lw.endsWith('.zip')) {
-                this._map[set.inode] = set;
+                this._setsById[set.inode] = set;
             } else {
                 this.inode = null;
             }
@@ -122,9 +131,9 @@
                         type = 'GB';
                     }
                 }
+                size = size.toFixed(2);
             }
 
-            size = size.toFixed(2);
             set.sizeview = `${size}${type}`;
         }
 
@@ -152,12 +161,11 @@
         }
 
         query_set_by_id(id) {
-            this.set = this._map[id] || null;
+            this.set = this._setsById[id] || null;
         }
 
         query_filelist(id) {
-            //implicit, we only save one set
-            //this.filelist = this._filelist;
+            this.filelist = this._filelists[id];
         }
 
         _is_match_term(terms, set) {
@@ -257,6 +265,7 @@
         }
 
         _sort_subdomains() {
+            //done by view
             //this.subdomains.sort((a, b) => b[1] - a[1]);
             
             //Object.entries(this.subdomains)   // [key,val] array
@@ -296,6 +305,8 @@
         var tpl_filelist_main = $_id('tpl-filelist-main');
         var tpl_filelist_info = $_id('tpl-filelist-info');
         var tpl_filelist_item = $_id('tpl-filelist-item');
+        var tpl_filelist_ext = $_id('tpl-filelist-ext');
+        var tpl_filelist_type = $_id('tpl-filelist-type');
         var tpl_filelist_error = $_id('tpl-filelist-error');
 
         function get_node(tpl) {
@@ -315,7 +326,7 @@
             $content.parentNode.replaceChild($content_new, $content);
             $content = $content_new;
         }
-        
+
         function clean_overlay() {
             let $overlay = document.getElementById('overlay');
             if ($overlay)
@@ -346,7 +357,7 @@
             let $systems = get_node(tpl_systems);
             let $urls = get_node(tpl_urls);
             let $pagination = get_node(tpl_pagination);
-            
+
             let sets = db.results;
             let sites =  db.subdomains;
             let page = get_page(sets);
@@ -532,9 +543,30 @@
             else {
                 let $info = get_node(tpl_filelist_info);
                 
-                //filelist.solid, filelist.method;)
-                
+                let $extensions = $info.getElementsByClassName('extensions')[0];
                 let extensions = filelist.extensions;
+                for (let extension of extensions) {
+                    let $ext = get_node(tpl_filelist_ext);
+                    $ext.textContent = `${extension}`
+                    $extensions.appendChild($ext);
+                }
+
+                let $types = $_cl($info, 'types');
+                let $type = get_node(tpl_filelist_type);
+
+                if (filelist.solid === undefined) {
+                    $type.textContent = `zip`;
+                } else if (filelist.solid) {
+                    $type.textContent = "7z / solid";
+                    $type.classList.add('solid');
+                } else {
+                    $type.textContent = "7z / non-solid";
+                    $type.classList.add('nonsolid');
+                }
+                if (filelist.method)
+                    $type.title = `Method: ${filelist.method}`;
+                $types.appendChild($type);
+
 
                 let $total = $info.getElementsByClassName('total')[0];
                 $total.textContent = `${filelist.files.length}`;
@@ -618,6 +650,11 @@
 
             // don't submit/push state
             show_results();
+
+            //TODO not current
+            //console.log("pop", event.state, event.state.curr_x, event.state.curr_y);
+            //if (event.state)
+            //   window.scroll(event.state.curr_x, event.state.curr_y);
         });
 
 
@@ -639,11 +676,16 @@
 
             db.query_set_by_id(setid)
             let set = db.set;
-
             //if (!set) ???
 
-            let url = `./filelists/${set.subdomain}/${set.name}.json`;
-            load_set(url);
+            db.query_filelist(set.inode)
+            if (db.filelist) {
+                show_filelist();
+            }
+            else {
+                let url = `./filelists/${set.subdomain}/${set.name}.json`;
+                load_filelist(set, url);
+            }
         }
         
         function update_url() {
@@ -656,9 +698,14 @@
                     params.delete(key);
             });
 
+            let state =  {
+                //curr_x: 0, //window.pageXOffset,
+                //curr_y: document.body.offsetTop //window.pageYOffset,
+            }
+
             let url = params.toString()
             url = `?${url}`; //force '?'
-            history.pushState(data, null, url);
+            history.pushState(state, null, url);
         }
 
         function load_params() {
@@ -693,15 +740,16 @@
                 });
         }
 
-        function load_set(url) {
+        function load_filelist(set, url) {
             // get json with single set info
             fetch(url)
                 .then((res) => res.json())
                 .then((response) => {
-                    db.init_filelist(response);
+                    db.init_filelist(set, response);
                     show_filelist();
                 })
                 .catch((error) => {
+                    // bad response/no file
                     //console.error('Error:', error);
                     show_filelist();
                 });

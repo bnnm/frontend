@@ -10,7 +10,6 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-
     <header class="header">
         <h1 class="head">xxx.joshw.info Updates, Search and Stuff <span id="banana">&#x1F34C;</span></h1>
 
@@ -94,8 +93,8 @@
 
         <div id="tpl-filelist-info">
             <p>
-                Extensions: <span class="extensions"><span>
-                
+                Extensions: <span class="extensions"></span>
+                Type: <span class="types"></span>                
             </p>
             <p>
                 <span class="total"></span> files contained in this set:
@@ -107,12 +106,16 @@
             <span class="name"></span>
             <small class="info"></small>
         </li>
-
+        <span id="tpl-filelist-ext" class="tag"></span>
+        <span id="tpl-filelist-type" class="type"></span>
         <div id="tpl-filelist-error" class="error">
             Couldn't load list, try again later :(
         </div>
     </div>
 
+    <noscript>
+        This site needs Javascript to work :(
+    </noscript>
     <script src="frontend.js"></script>
 </body>
 </html>
