@@ -1,0 +1,1 @@
+{"type": "7z", "size": 58101755, "method": "LZMA2:96m", "solid": true, "files": [{"name": "fake.header", "size": 1412, "time": "2019-11-01 13:40:35", "crc": "D671641E"}, {"name": "MUSIC.CLU", "size": 79923200, "time": "2002-02-04 21:35:22", "crc": "788ECDFF"}, {"name": "MUSIC.CLU.txth", "size": 272, "time": "2019-11-01 18:28:05", "crc": "28FE4FC3"}]}

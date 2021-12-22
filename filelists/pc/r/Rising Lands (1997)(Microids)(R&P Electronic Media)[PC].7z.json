@@ -1,0 +1,1 @@
+{"type": "7z", "size": 105031202, "method": "Delta LZMA2:24", "solid": true, "files": [{"name": "!Notes.txt", "size": 139, "time": "2021-01-27 07:00:32", "crc": "3C486E4B"}, {"name": "02.wav", "size": 99593132, "time": "2021-01-25 08:00:34", "crc": "6808DF6C"}, {"name": "03.wav", "size": 71531420, "time": "2021-01-25 08:00:49", "crc": "D32361A5"}]}
