@@ -5,4 +5,5 @@
 *.dll
 *.exe
 !.updater.sh
+!.server-test.bat
 #filelists
