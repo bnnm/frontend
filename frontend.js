@@ -82,7 +82,6 @@
                     file.dupe = true;
                 else
                     crcs.add(file.crc);
-                console.log(file.crc)
             }
         }
 
