@@ -1,0 +1,1 @@
+{"type": "7z", "size": 10096766, "method": "Delta LZMA2:24", "solid": true, "files": [{"name": "bgm_boss.wav", "size": 4770296, "time": "2020-06-25 12:23:53", "crc": "B0CBE1AB"}, {"name": "bgm_game.wav", "size": 4719936, "time": "2020-06-25 12:23:53", "crc": "4D867C8B"}, {"name": "bgm_title.wav", "size": 3528044, "time": "2020-06-25 12:23:53", "crc": "5A5DDA65"}]}

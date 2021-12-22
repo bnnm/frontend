@@ -1,0 +1,1 @@
+{"type": "7z", "size": 15761856, "method": "LZMA2:24m", "solid": true, "files": [{"name": "bgmusicFixed.fsb", "size": 15795424, "time": "2018-09-09 01:48:31", "crc": "5A43AC88"}, {"name": "bootSound.btsnd", "size": 798872, "time": "2018-09-09 00:40:56", "crc": "9B7D6CA4"}, {"name": "GameOver.fsb", "size": 329344, "time": "2018-09-09 01:48:31", "crc": "56401A75"}]}
