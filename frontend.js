@@ -661,6 +661,8 @@
         });
 
         window.addEventListener('popstate', (event) => {
+            //close_overlay(); //todo improve
+            document.body.classList.remove('overlayed');
             load_params();
             submit();
 
