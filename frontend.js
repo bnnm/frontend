@@ -814,6 +814,11 @@
             });
 
             document.addEventListener('keydown', handle_escape);
+            $overlay.addEventListener('click', (event) => {
+                if (!event.target.matches('.filelist'))
+                    return;
+                close_overlay();
+            });
         }
 
         function handle_escape(event) {
