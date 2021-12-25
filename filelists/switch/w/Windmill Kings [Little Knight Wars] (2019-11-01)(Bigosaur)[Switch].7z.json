@@ -1,0 +1,1 @@
+{"type": "7z", "size": 50683336, "method": "Delta LZMA2:24", "solid": true, "files": [{"name": "battle.wav", "size": 19926784, "time": "2021-11-26 00:37:59", "crc": "865F19A2"}, {"name": "intro.wav", "size": 47264124, "time": "2021-11-26 00:38:05", "crc": "2D323BFF"}, {"name": "map.wav", "size": 11238768, "time": "2021-11-26 00:38:07", "crc": "B2918208"}]}
