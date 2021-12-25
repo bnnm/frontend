@@ -5,6 +5,8 @@
     const SET_FORCE_RELOAD = true;
     const SETS_URL = 'index.json';
     const PAGE_RESULTS = 100;
+    const FILELISTS_CACHE_MAX = 300;
+    const FILELISTS_EVICT_NUM = 100;
     const SYSTEM_CONFIG = {
         '2sf': "DS",
         '3do': "3DO",
@@ -61,9 +63,23 @@
             this.query_empty();
         }
         
+        
+        
         init_filelist(set, filelist) {
-            //TODO: evict older sets
-            this._filelists[set.inode] = filelist;
+            this._filelists.set(set.inode, filelist);
+
+            // evict older sets to minimize memory (unlikely but...)
+            if (this._filelists.size > FILELISTS_CACHE_MAX) {
+                let done = 0;
+                for (let keyval of this._filelists) {
+                    this._filelists.delete(keyval[0]);
+                    done += 1;
+
+                    // remove up to N older elems (map is ordered)
+                    if (done > FILELISTS_EVICT_NUM)
+                        break;
+                }
+            }
 
             let crcs = new Set();
             filelist.extensions = [];
@@ -102,9 +118,7 @@
 
         _load_inode(set) {
             if (set.basename_lw.endsWith('.7z') || set.basename_lw.endsWith('.zip')) {
-                this._setsById[set.inode] = set;
-            } else {
-                this.inode = null;
+                this._setsById.set(set.inode, set);
             }
         }
 
@@ -168,12 +182,22 @@
             this.filelist = null;
         }
 
+        _clean_id(id) {
+            try {
+                return parseInt(id);
+            } catch(error) {
+                return 0;
+            }
+        }
+
         query_set_by_id(id) {
-            this.set = this._setsById[id] || null;
+            id = this._clean_id(id);
+            this.set = this._setsById.get(id) || null;
         }
 
         query_filelist(id) {
-            this.filelist = this._filelists[id] || null;
+            id = this._clean_id(id);
+            this.filelist = this._filelists.get(id) || null;
         }
 
         _is_match_term(terms, set) {
@@ -346,13 +370,13 @@
         function get_page(sets) {
             let page = $fpage.value || 0;
             try {
-                page = parseInt(page);
+                page = parseInt(page, 10);
                 page -= 1;
                 if (page < 0)
                     page = 0;
 
                 // clamp max page
-                let pages = parseInt(sets.length / PAGE_RESULTS) + 1;
+                let pages = parseInt(sets.length / PAGE_RESULTS, 10) + 1;
                 if (page >= pages)
                     page = pages - 1;
 
@@ -483,7 +507,7 @@
        
         function fill_pagination($block, sets, page) {
             let total = sets.length;
-            let pages = parseInt(total / PAGE_RESULTS) + 1;
+            let pages = parseInt(total / PAGE_RESULTS, 10) + 1;
 
             if (pages == 1)
                 return;

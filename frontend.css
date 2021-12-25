@@ -1,19 +1,22 @@
 html { }
 body {
     overflow-y: scroll;
-    font-family: serif;
+    font-family: sans-serif;
     line-height: 1.3em;
     margin: .5em;
     padding: 0;
     background-color:#ffffffff;
+    font-size:0.95em;
 }
 
-h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0; }
+.header { font-family:serif; font-size: initial; }
+h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
 
 #banana { cursor: pointer; display:inline-block;  }
-.banana { font-family: sans-serif; font-size:0.95em;  }
-.banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; font-family: serif; font-size: initial; }
-.banana a { color:rgb(9, 105, 218); font-family: sans-serif; font-size:0.95em; }
+.banana { font-family: serif;   }
+.banana .header a { font-size:1.00em; }
+.banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; }
+.banana a { color:rgb(9, 105, 218); font-size:1.05em; }
 .banana .systems,
 .banana .pagination { user-select: none; }
 #banana:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
@@ -21,7 +24,6 @@ h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0; }
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
-
 
 a { color: #0000EE; cursor: pointer; text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -118,7 +120,7 @@ a:visited { color: #551A8B; }
     margin: 0;
     padding: 0 0 0 1em;
     font-family: monospace;
-    font-size: 1.25em;
+    font-size: 1.30em;
 }
 
 .filelist-back { font-weight: bold; cursor: pointer; display: block; border-bottom: 1px solid #ccc; }
@@ -128,3 +130,7 @@ a:visited { color: #551A8B; }
 body.overlayed { overflow:hidden; /* remove scroll */ }
 
 .dupe::after { content:'dupe!'; color:#09a0a0; line-height: 1em; font-size:0.85em; }
+
+/* improves text selection */
+.filelist-main ul li { display: flex; }
+.filelist-main .info { margin-left: 1em;}
