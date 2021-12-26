@@ -7,3 +7,4 @@
 !.updater.sh
 !.server-test.bat
 #filelists
+*.tgz
