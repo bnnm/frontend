@@ -90,7 +90,8 @@
                 let pos = file.name.lastIndexOf('.');
                 let ext = '';
                 if (pos >= 0)
-                    ext = file.name.substring(pos + 1);
+                    ext = file.name.substring(pos + 1).toLowerCase();
+
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
 
