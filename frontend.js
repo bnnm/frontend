@@ -95,7 +95,7 @@
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
 
-                if (crcs.has(file.crc))
+                if (file.crc && crcs.has(file.crc))
                     file.dupe = true;
                 else
                     crcs.add(file.crc);
