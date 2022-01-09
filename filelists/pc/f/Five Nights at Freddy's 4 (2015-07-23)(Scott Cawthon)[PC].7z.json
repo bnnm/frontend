@@ -1,0 +1,1 @@
+{"type": "7z", "size": 13072953, "method": "Delta LZMA2:24", "solid": true, "files": [{"name": "ambience.wav", "size": 12204978, "time": "2017-12-07 17:30:08", "crc": "3D2C57E2"}, {"name": "ending.wav", "size": 3770838, "time": "2017-12-07 17:30:10", "crc": "A4E1471E"}, {"name": "title.wav", "size": 9178322, "time": "2017-12-07 17:30:08", "crc": "3F5C0B10"}]}
