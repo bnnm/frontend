@@ -330,7 +330,7 @@
         var tpl_system = $_id('tpl-system');
         var tpl_urls = $_id('tpl-urls');
         var tpl_url = $_id('tpl-url');
-        var tpl_date = $_id('tpl-date');
+        var tpl_separator = $_id('tpl-separator');
         var tpl_pagination = $_id('tpl-pagination');
         var tpl_page_number = $_id('tpl-page-number');
         var tpl_page_prev = $_id('tpl-page-prev');
@@ -476,11 +476,11 @@
 
                 if (separator && curr_date != set.date) {
                     curr_date = set.date;
-                    let $date = get_node(tpl_date);
-                    let $text = $date.getElementsByClassName('text')[0];
+                    let $separator = get_node(tpl_separator);
+                    let $text = $separator.getElementsByClassName('text')[0];
                     $text.textContent = curr_date;
 
-                    $block.appendChild($date);
+                    $block.appendChild($separator);
                 }
 
                 let $link = $url.getElementsByTagName('a')[0];
@@ -493,7 +493,10 @@
                 $system.textContent = sysname;
 
                 let $info = $url.getElementsByClassName('info')[0];
-                $info.textContent = `${set.sizeview} ${set.modified}`;
+                $info.textContent = `${set.sizeview}`;
+
+                let $date = $url.getElementsByClassName('date')[0];
+                $date.textContent = `${set.modified}`;
 
                 let $set = $url.getElementsByClassName('showset')[0];
                 if (set.inode) {
@@ -569,7 +572,10 @@
             $link.textContent = set.basename;
 
             let $info = $main.getElementsByClassName('info')[0];
-            $info.textContent = `${set.sizeview} ${set.modified}`;
+            $info.textContent = `${set.sizeview}`;
+
+            let $date = $main.getElementsByClassName('date')[0];
+            $date.textContent = `${set.modified}`;
 
             if (!filelist) {
                 let $error = get_node(tpl_filelist_error);

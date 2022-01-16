@@ -10,7 +10,7 @@ body {
 }
 
 .header { font-family:serif; font-size: initial; }
-h1 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
+h1, h2 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
 
 #banana { cursor: pointer; display:inline-block;  }
 .banana { font-family: serif;   }
@@ -37,7 +37,8 @@ a:visited { color: #551A8B; }
 .links { float: right; }
 .links a:visited { color:#0000EE; }
 
-.info { color: #666; }
+.info { color: #666; font-size: 0.80em; }
+.date { color: #888; }
 
 .results {
     margin: 1em 0 1.3em 0;
@@ -77,8 +78,8 @@ a:visited { color: #551A8B; }
     cursor: pointer; margin: 0 5px; padding: 0 3px;
 }
 
-.date { font-size: smaller; margin: 1em 1em 0.5em; }
-.date hr { padding: 0; margin: 0; border:0;  border-bottom: 1px solid #ddd; }
+.separator { font-size: smaller; margin: 1em 1em 0.5em; }
+.separator hr { padding: 0; margin: 0; border:0;  border-bottom: 1px solid #ddd; }
 
 .urls {
     line-height: 1.5em;
@@ -119,7 +120,10 @@ a:visited { color: #551A8B; }
     font-size: 1.30em;
 }
 
-.filelist-back { font-weight: bold; cursor: pointer; display: block; border-bottom: 1px solid #ccc; }
+.filelist-back {
+    font-weight: bold; cursor: pointer; display: block; border-bottom: 1px solid #ccc; 
+    background-color:   #89cff0; margin: 0 -1em; padding-left: 1em; border-radius: 10px 10px 0 0; 
+}
 .filelist-back::before { content:'⏎'; font-size:0.90em; }
 .filelist-main .error { color:red; }
 
@@ -129,4 +133,4 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 
 /* improves text selection */
 .filelist-main ul li { display: flex; }
-.filelist-main .info { margin-left: 1em;}
+.filelist-main ul .info { margin-left: 1em; }

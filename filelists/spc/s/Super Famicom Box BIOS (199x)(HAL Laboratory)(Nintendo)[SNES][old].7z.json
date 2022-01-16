@@ -1,0 +1,1 @@
+{"type": "7z", "size": 22825, "method": "LZMA:18", "solid": true, "files": [{"name": "01 Main Menu.spc", "size": 66092, "crc": "5EE9D249"}, {"name": "02 Info Screen.spc", "size": 66092, "crc": "A34E6A05"}, {"name": "03 Demo Mode.spc", "size": 66092, "crc": "D4FDF5C2"}, {"name": "info.txt", "size": 107, "crc": "0C933BDC"}]}
