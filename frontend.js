@@ -99,7 +99,25 @@
                     file.dupe = true;
                 else
                     crcs.add(file.crc);
+
+                if (!file.dir) {
+                    let dirpos = file.name.lastIndexOf("/");
+                    if (dirpos >= 0) {
+                        file.dir = file.name.substring(0, dirpos + 1);
+                        file.name = file.name.substring(dirpos + 1);
+                    }
+                }
             }
+
+            filelist.files.sort((a, b) => {
+                if (a.dir === undefined)
+                    return -1;
+                else if (b.dir === undefined)
+                    return 1;
+                let dir_cmp = a.dir.localeCompare(b.dir, 'en', { sensitivity:'base' });
+                let file_cmp = a.name.localeCompare(b.name, 'en', { sensitivity:'base' });
+                return dir_cmp || file_cmp;
+            });
         }
 
         _prepare_sets() {
@@ -162,6 +180,8 @@
 
         _load_url(set) {
             set.url = `https://${set.subdomain}.joshw.info/${set.name}`;
+            if (set.url.indexOf('%')) 
+                set.url = set.url.replaceAll('%', '%25')
             if (set.url.indexOf('#')) 
                 set.url = set.url.replaceAll('#', '%23')
         }
@@ -615,9 +635,12 @@
                 let $list = $info.getElementsByTagName('ul')[0];
                 for (let file of filelist.files) {
                     let $item = get_node(tpl_filelist_item);
+                    let $dir  = $item.getElementsByClassName('dir')[0];
                     let $name = $item.getElementsByClassName('name')[0];
                     let $info = $item.getElementsByClassName('info')[0];
 
+                    if (file.dir)
+                        $dir.textContent  = `${file.dir}`;
                     $name.textContent = `${file.name}`;
                     $info.textContent = `${file.sizeview}`;
 

@@ -134,3 +134,4 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 /* improves text selection */
 .filelist-main ul li { display: flex; }
 .filelist-main ul .info { margin-left: 1em; }
+.filelist-main ul .dir { color:#666 }
