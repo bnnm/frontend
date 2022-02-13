@@ -7,6 +7,8 @@
     const PAGE_RESULTS = 100;
     const FILELISTS_CACHE_MAX = 300;
     const FILELISTS_EVICT_NUM = 100;
+    const SYSTEM_AMIGA = 'cdi'
+    const SYSTEM_AMIGA_TEXT_LW = '[amiga]'
     const SYSTEM_CONFIG = {
         '2sf': "DS",
         '3do': "3DO",
@@ -81,16 +83,34 @@
                 }
             }
 
+            /*
+                {
+                    "type": "7z", "size": 12345, "method": "LZMA2:20", "solid": true, "files": [
+                        {"name": "file.ext", "size": 123, "time": "2001-01-01 00:15:07", "crc": "9B621D5B"}, {...}, ...
+                    ]
+                }
+            */
             let crcs = new Set();
             filelist.extensions = [];
             for (let file of filelist.files) {
                 this._load_sizeview(file);
 
-                //todo subdomain + amiga > ignore
-                let pos = file.name.lastIndexOf('.');
                 let ext = '';
-                if (pos >= 0)
-                    ext = file.name.substring(pos + 1).toLowerCase();
+                if (set.subdomain == SYSTEM_AMIGA && set.basename_lw.includes(SYSTEM_AMIGA_TEXT_LW)) {
+                    // amiga sets may have "file.ext" or "ext.file" format
+                    let pos = file.name.lastIndexOf('.');
+                    if (pos >= 0) {
+                        let test1 = file.name.substring(0, pos + 1).toLowerCase();
+                        let test2 = file.name.substring(pos + 1).toLowerCase();
+                        ext = test1.length > test2.length ? test2 : test1;
+                        console.log(ext);
+                    }
+                } else {
+                    let pos = file.name.lastIndexOf('.');
+                    if (pos >= 0)
+                        ext = file.name.substring(pos + 1).toLowerCase();
+                    
+                }
 
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
