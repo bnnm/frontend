@@ -9,6 +9,7 @@
     const FILELISTS_EVICT_NUM = 100;
     const SYSTEM_AMIGA = 'cdi'
     const SYSTEM_AMIGA_TEXT_LW = '[amiga]'
+    const SYSTEM_AMIGA_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune'];
     const SYSTEM_CONFIG = {
         '2sf': "DS",
         '3do': "3DO",
@@ -64,9 +65,7 @@
             this._prepare_sets();
             this.query_empty();
         }
-        
-        
-        
+
         init_filelist(set, filelist) {
             this._filelists.set(set.inode, filelist);
 
@@ -83,37 +82,10 @@
                 }
             }
 
-            /*
-                {
-                    "type": "7z", "size": 12345, "method": "LZMA2:20", "solid": true, "files": [
-                        {"name": "file.ext", "size": 123, "time": "2001-01-01 00:15:07", "crc": "9B621D5B"}, {...}, ...
-                    ]
-                }
-            */
             let crcs = new Set();
             filelist.extensions = [];
             for (let file of filelist.files) {
                 this._load_sizeview(file);
-
-                let ext = '';
-                if (set.subdomain == SYSTEM_AMIGA && set.basename_lw.includes(SYSTEM_AMIGA_TEXT_LW)) {
-                    // amiga sets may have "file.ext" or "ext.file" format
-                    let pos = file.name.lastIndexOf('.');
-                    if (pos >= 0) {
-                        let test1 = file.name.substring(0, pos + 1).toLowerCase();
-                        let test2 = file.name.substring(pos + 1).toLowerCase();
-                        ext = test1.length > test2.length ? test2 : test1;
-                        console.log(ext);
-                    }
-                } else {
-                    let pos = file.name.lastIndexOf('.');
-                    if (pos >= 0)
-                        ext = file.name.substring(pos + 1).toLowerCase();
-                    
-                }
-
-                if (!filelist.extensions.includes(ext))
-                    filelist.extensions.push(ext);
 
                 if (file.crc && crcs.has(file.crc))
                     file.dupe = true;
@@ -127,6 +99,10 @@
                         file.name = file.name.substring(dirpos + 1);
                     }
                 }
+                // after loading dir/name
+                let ext = this._get_ext(set, file);
+                if (!filelist.extensions.includes(ext))
+                    filelist.extensions.push(ext);
             }
 
             filelist.files.sort((a, b) => {
@@ -168,6 +144,44 @@
                 basename = basename.substring(index + 1);
             set.basename = basename;
             set.basename_lw = basename.toLowerCase();
+        }
+
+        _get_ext(set, file) {
+            let ext = '';
+            let name_lw = file.name.toLowerCase();
+
+            let is_amiga = set.subdomain == SYSTEM_AMIGA && set.basename_lw.includes(SYSTEM_AMIGA_TEXT_LW);
+            if (!is_amiga) {
+                // regular sets use file.ext (or just .file)
+                let pos = name_lw.lastIndexOf('.');
+                if (pos >= 0)
+                    ext = name_lw.substring(pos + 1);
+
+            } else {
+                    // amiga sets may have "file.ext" or "ext.file" format, try to autodetect
+                    // - known extension: use that (needs a known list as sets may mix normal and reverse exts)
+                    // - no known extension: use smaller one (not always correct as "01.ext"<>"ext.01", "smp.dig",
+                    //   "mod.v1.1" may exist, so the known list is preferable)
+                    let ext_frst = '';
+                    let pos_frst = name_lw.indexOf('.');
+                    if (pos_frst >= 0)
+                        ext_frst = name_lw.substring(0, pos_frst);
+
+                    let ext_last = '';
+                    let pos_last = name_lw.lastIndexOf('.');
+                    if (pos_last >= 0)
+                        ext_last = name_lw.substring(pos_last + 1);
+
+                    if (SYSTEM_AMIGA_EXTS.includes(ext_frst)) {
+                        ext = ext_frst;
+                    } else if (SYSTEM_AMIGA_EXTS.includes(ext_last)) {
+                        ext = ext_last;
+                    } else {
+                        ext = ext_frst && ext_frst.length <= ext_last.length ? ext_frst : ext_last;
+                    }
+                }
+
+            return ext;
         }
 
         _load_sizeview(set) {
