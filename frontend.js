@@ -7,6 +7,7 @@
     const PAGE_RESULTS = 100;
     const FILELISTS_CACHE_MAX = 300;
     const FILELISTS_EVICT_NUM = 100;
+    const EXTS_LESSER = ['txt','7z','zip','rar','m3u'];
     const SYSTEM_AMIGA = 'cdi'
     const SYSTEM_AMIGA_TEXT_LW = '[amiga]'
     const SYSTEM_AMIGA_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune'];
@@ -103,6 +104,8 @@
                 let ext = this._get_ext(set, file);
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
+                if (EXTS_LESSER.includes(ext))
+                    file.lesser = true;
             }
 
             filelist.files.sort((a, b) => {
@@ -158,28 +161,28 @@
                     ext = name_lw.substring(pos + 1);
 
             } else {
-                    // amiga sets may have "file.ext" or "ext.file" format, try to autodetect
-                    // - known extension: use that (needs a known list as sets may mix normal and reverse exts)
-                    // - no known extension: use smaller one (not always correct as "01.ext"<>"ext.01", "smp.dig",
-                    //   "mod.v1.1" may exist, so the known list is preferable)
-                    let ext_frst = '';
-                    let pos_frst = name_lw.indexOf('.');
-                    if (pos_frst >= 0)
-                        ext_frst = name_lw.substring(0, pos_frst);
+                // amiga sets may have "file.ext" or "ext.file" format, try to autodetect
+                // - known extension: use that (needs a known list as sets may mix normal and reverse exts)
+                // - no known extension: use smaller one (not always correct as "01.ext"<>"ext.01", "smp.dig",
+                //   "mod.v1.1" may exist, so the known list is preferable)
+                let ext_frst = '';
+                let pos_frst = name_lw.indexOf('.');
+                if (pos_frst >= 0)
+                    ext_frst = name_lw.substring(0, pos_frst);
 
-                    let ext_last = '';
-                    let pos_last = name_lw.lastIndexOf('.');
-                    if (pos_last >= 0)
-                        ext_last = name_lw.substring(pos_last + 1);
+                let ext_last = '';
+                let pos_last = name_lw.lastIndexOf('.');
+                if (pos_last >= 0)
+                    ext_last = name_lw.substring(pos_last + 1);
 
-                    if (SYSTEM_AMIGA_EXTS.includes(ext_frst)) {
-                        ext = ext_frst;
-                    } else if (SYSTEM_AMIGA_EXTS.includes(ext_last)) {
-                        ext = ext_last;
-                    } else {
-                        ext = ext_frst && ext_frst.length <= ext_last.length ? ext_frst : ext_last;
-                    }
+                if (SYSTEM_AMIGA_EXTS.includes(ext_frst)) {
+                    ext = ext_frst;
+                } else if (SYSTEM_AMIGA_EXTS.includes(ext_last)) {
+                    ext = ext_last;
+                } else {
+                    ext = ext_frst && ext_frst.length <= ext_last.length ? ext_frst : ext_last;
                 }
+            }
 
             return ext;
         }
@@ -680,6 +683,8 @@
 
                     if (file.dupe)
                        $item.classList.add('dupe');
+                    if (file.lesser)
+                       $item.classList.add('lesser');
                     $list.appendChild($item);
                 }
                 $main.appendChild($info);
