@@ -679,6 +679,7 @@
                     if (file.dir)
                         $dir.textContent  = `${file.dir}`;
                     $name.textContent = `${file.name}`;
+                    $name.title = `${file.time}`;
                     $info.textContent = `${file.sizeview}`;
 
                     if (file.dupe)
