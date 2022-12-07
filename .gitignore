@@ -1,0 +1,11 @@
+.*
+!/.gitignore
+!.gitattributes
+!.github
+*.dll
+*.exe
+!.updater.sh
+!.server-test.bat
+#filelists
+*.tgz
+/tests

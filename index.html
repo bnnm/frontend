@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>joshw frontend</title>
+    <!--<link rel="search" type="application/opensearchdescription+xml" title="vgm.hcs64.com" href="opensearch.xml">-->
+    <link href="frontend.css" rel="stylesheet" type="text/css">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+</head>
+<body>
+    <header class="header">
+        <h1 class="head">xxx.joshw.info Updates, Search and Stuff <span id="banana">&#x1F34C;</span></h1>
+
+        <nav class="links">
+            <a href="?">Updates</a> ·
+            <!--<a href="#tags" class="add" data-tag="*">Tags</a> ·-->
+            <a href="https://vgm.hcs64.com/upload/" target="_blank">Contribute</a> ·
+            <a href="https://hcs64.com/" target="_blank">HCS</a> ·
+            <a href="https://hcs64.com/mboard/forum.php" target="_blank">Forum</a>
+        </nav>
+    </header>
+
+    <form id="searchform" action=".">
+        <span class="search-line">
+            <input name="text" placeholder="Go ahead, search away!" type="search" tabindex="1" autocomplete="off">
+            <input type="hidden" name="site"/>
+            <input type="hidden" name="page"/>
+            <input type="hidden" name="set"/>
+            <!--
+            <input type="hidden" name="tags"/>
+            -->
+            <input type="submit" value="Go">
+        </span>
+
+        <small>
+            <i>text</i> (partial text), <i>"text text"</i> (exact text), <b></b><i>^text</i> (start of text), <i>-term</i> (exclude text), <i>:text</i> (regex text)
+        </small>
+    </form>
+
+    <section id="main">
+        <div id="content">
+        </div>
+    </section>
+
+    <div class="tpl">
+        <div id="tpl-results-recent" class="results">
+            <a href="">#</a>
+            <b>Recently added &amp; updated</b>
+        </div>
+
+        <div id="tpl-results-search" class="results">
+            <a href="">#</a>
+            <span class="text"></span> results
+        </div>
+
+        <div id="tpl-systems" class="systems">
+            System:
+        </div>
+        <span id="tpl-system" class="sitetag tag" data-site=""></span>
+
+        <h2 id="tpl-separator" class="separator">
+            <span class="text"></span>
+            <hr>
+        </h2>
+
+        <div id="tpl-urls" class="urls">
+        </div>
+
+        <div id="tpl-url" class="url">
+            <a href=""></a>
+            <span class="set-line">
+                <span class="sitetag tag" data-site=""></span>
+            
+                <small class="info"></small>
+                <small class="date"></small>
+                <span class="showset tag" data-set="" title="show details">···</span>
+            </span>
+        </div>
+
+        <div id="tpl-pagination" class="pagination">
+        </div>
+
+        <a id="tpl-page-number" data-page=""></a>
+        <a id="tpl-page-prev" class="page-prev" data-page="">prev</a>
+        <a id="tpl-page-next" class="page-next" data-page="">next</a>
+        <span id="tpl-page-more">...</span>
+
+        <div id="tpl-filelist" class="filelist">
+        </div>
+
+        <div id="tpl-filelist-main" class="filelist-main">
+            <div class="filelist-back">
+                Back
+            </div>
+            <p>
+                Details for <a href=""></a> <small class="info"></small> <small class="date"></small>
+            </p>
+        </div>
+
+        <div id="tpl-filelist-info">
+            <p>
+                Type: <span class="types"></span> /
+                Extensions: <span class="extensions"></span>
+            </p>
+            <p>
+                <span class="total"></span> files contained in this set:
+            </p>
+            <ul></ul>
+        </div>
+
+        <li id="tpl-filelist-item">
+            <span class="dir"></span>
+            <span class="name"></span>
+            <small class="info"></small>
+        </li>
+        <span id="tpl-filelist-ext" class="tag extension"></span>
+        <span id="tpl-filelist-type" class="type"></span>
+        <div id="tpl-filelist-error" class="error">
+            Couldn't load list, try again a bit later :(
+        </div>
+
+        <div id="tpl-loading" class="loader"></div>
+    </div>
+
+    <noscript>
+        This site needs Javascript to work :(
+    </noscript>
+    <script src="frontend.js"></script>
+</body>
+</html>

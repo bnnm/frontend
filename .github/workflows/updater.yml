@@ -1,0 +1,35 @@
+# github workflow to update set list
+name: index.json updater
+
+# set comes from index.json, that is updated externally, so set a cron to check latest version every hour
+on:
+  # every hour, a bit after index.json that usually is created after Nh30m - Nh45m
+  schedule:
+  - cron: '0 * * * *'
+
+  # manual
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    # ignore error that may be returned when no changes happen
+    continue-on-error: true
+
+    steps:
+
+    # default repo checks out with common config + token to commit
+    # see: https://github.com/actions/checkout#usage
+    - uses: actions/checkout@v2
+    #  with:
+    #    # default is 1, set 0 to download full repo instead of latest commit only
+    #    fetch-depth: 0
+
+    # overwrite current .json file if newer and commit
+    - name: Main
+      env:
+        INFO_JSON_URL: ${{ secrets.INFO_JSON_URL }}
+        USER_MAIL: ${{ secrets.USER_MAIL }}
+        USER_NAME: ${{ secrets.USER_NAME }}
+      run: sh .updater.sh $INFO_JSON_URL $USER_MAIL $USER_NAME
