@@ -5,6 +5,7 @@
 *.dll
 *.exe
 !.updater.sh
+!.README
 !.server-test.bat
 #filelists
 *.tgz

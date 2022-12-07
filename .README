@@ -1,0 +1,13 @@
+This is a search frontend for "a certain site".
+
+Needs to be a server-less site that fully works using Github's (static) pages service, since we don't want to pay $$$ for an actual server, and github's pages are stable and fast.
+
+To achieve this we need a "database" JSON with all search info, and javascript that searchs and displays this once loaded.
+
+When loading the page (`index.html` + `frontend.js`), JS fetches a `index.json` "database" (`Web` class), preprocesses it for internal use and to handle searches (`Database` class) and displays it (`Printer`).
+
+Originally JSON database couldn't be accesed via AJAX due to CORS, so it uses a local copy that's feched every hour (if updated) using github's actions to call an script. Now it's `index.json` CORS-enabled, but keeps this script behaviour since index.json must be cleaned up a bit for now, plus Github's CDN files are gzipped and faster (=better initial load).
+
+Being server-less, loading may take more than your usual server. Though, fetching the gzipped `index.json` (~2MB) should be pretty fast with a good connection (<100ms), then it's cached until database changes (usually once per day or less). Searches are faster since there is no server roundtrip, so actually feels a bit snappier than the server-style frontend. Of course, trade-off being a bit more memory than your average site, but probably not noticeable. Bandwidth wise, serving ~2MB per day to a low number of users seems pretty ok for Github pages.
+
+Javascript code is mostly quick and dirty, mixing a bunch of old and new-style code (like new style `class` vs old style `function`-class) since I was mainly messing around while learning some newer ES6+ features.
