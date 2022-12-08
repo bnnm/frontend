@@ -6,6 +6,7 @@
 *.exe
 !.updater.sh
 !.README
+!.index-cleaner.py
 !.server-test.bat
 #filelists
 *.tgz
