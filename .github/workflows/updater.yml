@@ -3,9 +3,9 @@ name: index.json updater
 
 # set comes from index.json, that is updated externally, so set a cron to check latest version every hour
 on:
-  # every hour, a bit after index.json that usually is created after Nh30m - Nh45m
+  # every hour, a bit after index.json that usually is created after some intervals (15m?)
   schedule:
-  - cron: '0 * * * *'
+  - cron: '5 * * * *'
 
   # manual
   workflow_dispatch:
