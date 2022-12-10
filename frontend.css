@@ -34,7 +34,7 @@ a:visited { color: #551A8B; }
 .header { margin-bottom: 1em; }
 .head { display:inline-block; }
 
-.links { float: right; }
+.links { float: right; margin-bottom: 0.5em; }
 .links a:visited { color:#0000EE; }
 
 .info { color: #666; font-size: 0.80em; }
@@ -140,6 +140,11 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 .filelist-main ul .dir { color:#666 }
 .filelist-main ul .lesser { color:#666 }
 
+.info-loader {
+    opacity:0;
+    animation: anim-fadein 0.0s linear 0.25s 1;
+    animation-fill-mode: forwards;
+}
 
 .loader {
     width: 32px; height: 32px;

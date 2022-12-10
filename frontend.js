@@ -6,13 +6,13 @@
 
     // config
     const SETS_URL = 'index-clean.json';
+    const USE_EXTERNAL_FILELISTS_SAMEFOLDER = false;
+    const USE_EXTERNAL_FILELISTS_SUBFOLDER = true;
     const FORCE_SET_RELOAD = true;
     const PAGE_RESULTS = 100;
     const FILELISTS_CACHE_MAX = 300;
     const FILELISTS_EVICT_NUM = 100;
     const EXTS_LESSER = ['txt','7z','zip','rar','m3u'];
-    const USE_EXTERNAL_FILELISTS_SAMEFOLDER = false;
-    const USE_EXTERNAL_FILELISTS_SUBFOLDER = true;
 
     // constants
     const SYSTEM_AMIGA = 'cdi'
@@ -253,9 +253,9 @@
 
         _load_url(set) {
             set.url = `https://${set.subdomain}.joshw.info/${set.name}`;
-            if (set.url.indexOf('%')) 
+            if (set.url.indexOf('%'))
                 set.url = set.url.replace(/%/g, '%25')
-            if (set.url.indexOf('#')) 
+            if (set.url.indexOf('#'))
                 set.url = set.url.replace(/#/g, '%23')
         }
 
@@ -272,7 +272,6 @@
             set.date = date;
         }
 
-        
 
         query_empty() {
             this.results = [];
@@ -334,7 +333,7 @@
                 if (!cmp.includes(term))
                     return false;
             }
-            
+
             return true;
         }
 
@@ -362,7 +361,7 @@
                     return accu;
                 }, {out: ['']}
             ).out;
-    
+
             //TODO improve and pre-convert to objects
 
             //let terms = {}
@@ -379,18 +378,18 @@
 
             this.subdomains = {};
             this.results = [];
-            
+
             this._sets.forEach(set => {
                 if (set.disabled)
                     return;
-                
+
                 let term_ok = this._is_match_terms(terms, set);
                 let site_ok = this._is_match_site(q.site, set);
 
                 if (term_ok && site_ok) {
                     this.results.push(set);
                 }
-                
+
                 // adding site_ok will hide other subdomains
                 if (term_ok /*&& site_ok*/ || q.showRecent) {
                     this._include_subdomain(set);
@@ -421,7 +420,7 @@
         _sort_subdomains() {
             //done by view
             //this.subdomains.sort((a, b) => b[1] - a[1]);
-            
+
             //Object.entries(this.subdomains)   // [key,val] array
             //    .sort((a, b) => {
             //        return b[1] - a[1];     //sort by value (total sets)
@@ -530,8 +529,14 @@
         }
 
         this.print_loader = function ()  {
+            let $results = get_tpl(tpl_results_recent);
             let $loading = get_tpl(tpl_loading);
-            $content.appendChild($loading); //should be deleted during printing
+
+            // results header + spinner, delayed a bit to look like it's doing something
+            $results.classList.add('info-loader')
+            $content.appendChild($results);
+            $content.appendChild($loading);
+            // should be deleted when printing
         }
 
         this.print_recent = function () {
@@ -633,7 +638,7 @@
                 $block.appendChild($url);
             }
         }
-       
+
         function fill_pagination($block, sets, page) {
             let total = sets.length;
             let pages = parseInt(total / PAGE_RESULTS, 10) + 1;
@@ -708,7 +713,7 @@
             }
             else {
                 let $info = get_tpl(tpl_filelist_info);
-                
+
                 let $extensions = $info.getElementsByClassName('extensions')[0];
                 let extensions = filelist.extensions;
                 for (let extension of extensions) {
@@ -966,7 +971,7 @@
                     show_filelist();
                 });
         }
-        
+
         function get_query() {
             let q = {
                 text: $ftext.value,
@@ -994,9 +999,9 @@
             db.query_filelist(q);
 
             pt.print_filelist();
-            
+
             open_overlay();
-            
+
             disable_effects();
         }
 
