@@ -879,6 +879,13 @@
                     url = `https://${set.subdomain}.joshw.info/.filelists/${set.name}.json`;
                 else // internal
                     url = `./filelists/${set.subdomain}/${set.name}.json`;
+
+                // TODO fix_url helper
+                if (url.indexOf('%'))
+                    url = url.replace(/%/g, '%25')
+                if (set.url.indexOf('#'))
+                    url = url.replace(/#/g, '%23')
+
                 if (FORCE_SET_RELOAD)
                     url += '?' + Math.random();
                 load_filelist(set, url);
