@@ -6,6 +6,7 @@
 
     // config
     const SETS_URL = 'index-clean.json';
+    const EXTS_URL = 'exts.json';
     const USE_EXTERNAL_FILELISTS_SAMEFOLDER = false;
     const USE_EXTERNAL_FILELISTS_SUBFOLDER = true;
     const FORCE_SET_RELOAD = true;
@@ -13,6 +14,7 @@
     const FILELISTS_CACHE_MAX = 300;
     const FILELISTS_EVICT_NUM = 100;
     const EXTS_LESSER = ['txt','7z','zip','rar','m3u','xml','json','png','jpg','jpeg','exe','ini'];
+    //const EXTS_ARCHIVE = ['7z','zip'];
 
     // constants
     const REVERSED_SYSTEM = 'cdi'
@@ -62,12 +64,17 @@
 
     //{"size": 123456789, "subdomain": 'xxx', "inode": 123, "name": "(path)/(name)", "modified": "2000-01-01 10:10"},
     class Database {
+        //*********************************************************************
+        // init
+
         constructor() {
             this._sets = [];
+            this._exts = {};
             this.query_empty();
         }
 
-        init(sets) {
+        // setup index .json
+        init_index(sets) {
             this._sets = sets;
             this._setsById = new Map(); //int inode
             this._filelists = new Map(); //same
@@ -76,6 +83,15 @@
             this.query_empty();
         }
 
+        // setup exts .json
+        init_exts(sets) {
+            this._exts = exts;
+
+            //this._prepare_exts();
+            this.query_empty();
+        }
+
+        // setup single filelist .json
         init_filelist(set, filelist) {
             this._filelists.set(set.inode, filelist);
 
@@ -110,7 +126,7 @@
                     }
                 }
                 // after loading dir/name
-                let ext = this._get_ext(set, file);
+                let ext = this._extract_ext(set, file);
                 if (!filelist.extensions.includes(ext))
                     filelist.extensions.push(ext);
                 if (EXTS_LESSER.includes(ext))
@@ -128,6 +144,9 @@
             });
         }
 
+        //*********************************************************************
+        // prepare index list
+
         _prepare_sets() {
             this._sets.forEach(set => {
                 // tweak original json info
@@ -143,49 +162,6 @@
                 // thus should be safe to use strings as-is without XSS (hopefully)
                 //this._escape(set);
             });
-        }
-
-        _get_ext(set, file) {
-            let ext = ''; // extensionless by default
-            let name = file.name;
-
-            let is_reversed = set.subdomain == REVERSED_SYSTEM && set.basename_lw.includes(REVERSED_TAG_LW);
-            if (!is_reversed) {
-                // regular sets use file.ext (or just .file)
-                let pos = name.lastIndexOf('.');
-                if (pos >= 0)
-                    ext = name.substring(pos + 1);
-
-            } else {
-                // amiga sets may have "file.ext" or "ext.file" format, try to autodetect
-                // - known extension: use that (needs a known list as sets may mix normal and reverse exts)
-                // - no known extension: use smaller one (not always correct as "01.ext"<>"ext.01", "smp.dig",
-                //   "mod.v1.1" may exist, so the known list is preferable)
-                let name_lw = file.name.toLowerCase();
-
-                let ext_frst = '';
-                let pos_frst = name_lw.indexOf('.');
-                if (pos_frst >= 0)
-                    ext_frst = name_lw.substring(0, pos_frst);
-
-                let ext_last = '';
-                let pos_last = name_lw.lastIndexOf('.');
-                if (pos_last >= 0)
-                    ext_last = name_lw.substring(pos_last + 1);
-
-                if (REVERSED_EXTS.includes(ext_frst)) {
-                    ext = ext_frst;
-                } else if (REVERSED_EXTS.includes(ext_last)) {
-                    ext = ext_last;
-                } else {
-                    if (ext_frst && ext_frst.length <= ext_last.length)
-                        ext = ext_frst;
-                    else
-                        ext = ext_last;
-                }
-            }
-
-            return ext;
         }
 
         _load_basename(set) {
@@ -218,8 +194,13 @@
                 delete set.id;
             }
 
+            //EXTS_ARCHIVE
             if (set.basename_lw.endsWith('.7z') || set.basename_lw.endsWith('.zip')) {
                 this._setsById.set(set.inode, set);
+                set.archive = true;
+            }
+            else {
+                set.archive = false;
             }
         }
 
@@ -278,6 +259,54 @@
         }
 
 
+
+        // detect extension from a filename
+        _extract_ext(set, file) {
+            let ext = ''; // extensionless by default
+            let name = file.name;
+
+            let is_reversed = set.subdomain == REVERSED_SYSTEM && set.basename_lw.includes(REVERSED_TAG_LW);
+            if (!is_reversed) {
+                // regular sets use file.ext (or just .file)
+                let pos = name.lastIndexOf('.');
+                if (pos >= 0)
+                    ext = name.substring(pos + 1);
+
+            } else {
+                // amiga sets may have "file.ext" or "ext.file" format, try to autodetect
+                // - known extension: use that (needs a known list as sets may mix normal and reverse exts)
+                // - no known extension: use smaller one (not always correct as "01.ext"<>"ext.01", "smp.dig",
+                //   "mod.v1.1" may exist, so the known list is preferable)
+                let name_lw = file.name.toLowerCase();
+
+                let ext_frst = '';
+                let pos_frst = name_lw.indexOf('.');
+                if (pos_frst >= 0)
+                    ext_frst = name_lw.substring(0, pos_frst);
+
+                let ext_last = '';
+                let pos_last = name_lw.lastIndexOf('.');
+                if (pos_last >= 0)
+                    ext_last = name_lw.substring(pos_last + 1);
+
+                if (REVERSED_EXTS.includes(ext_frst)) {
+                    ext = ext_frst;
+                } else if (REVERSED_EXTS.includes(ext_last)) {
+                    ext = ext_last;
+                } else {
+                    if (ext_frst && ext_frst.length <= ext_last.length)
+                        ext = ext_frst;
+                    else
+                        ext = ext_last;
+                }
+            }
+
+            return ext;
+        }
+
+        //*********************************************************************
+        // query
+        
         query_empty() {
             this.results = [];
             this.subdomains = {};
@@ -634,7 +663,7 @@
                 $date.textContent = `${set.modified}`;
 
                 let $set = $url.getElementsByClassName('showset')[0];
-                if (set.inode) {
+                if (set.archive) {
                     $set.dataset.set = set.inode;
                 } else {
                     $set.remove();
@@ -959,7 +988,25 @@
             fetch(SETS_URL)
                 .then((res) => res.json())
                 .then((response) => {
-                    db.init(response);
+                    db.init_index(response);
+                    load_params();
+                    //show_results();
+                    submit(true);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function load_tags() {
+
+            pt.print_loader();
+
+            // get json with set info
+            fetch(EXTS_URL)
+                .then((res) => res.json())
+                .then((response) => {
+                    db.init_exts(response);
                     load_params();
                     //show_results();
                     submit(true);
