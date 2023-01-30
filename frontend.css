@@ -1,4 +1,3 @@
-html { }
 body {
     overflow-y: scroll;
     font-family: sans-serif;
@@ -195,3 +194,5 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
         display: block;
     }
 }
+
+.process-error { color: red; margin: 2em 0; font-size: 2em; }

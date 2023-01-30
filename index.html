@@ -118,17 +118,23 @@
         <span id="tpl-filelist-ext" class="tag extension"></span>
         <span id="tpl-filelist-type" class="type"></span>
         <div id="tpl-filelist-error" class="error">
-            Couldn't load list, try again a bit later :(
+            Couldn't load list, try again a later/report :(
         </div>
 
         <div id="tpl-loading" class="loader"></div>
 
         <span id="tpl-ext" class="filext tag" data-ext=""></span>
+
+        <h2 id="tpl-error-text" class="process-error"></h2>
     </div>
 
     <noscript>
-        This site needs Javascript to work :(
+        <h2 class="process-error">This site needs Javascript to work :(</h2>
     </noscript>
-    <script src="frontend.js"></script>
+
+    <script src="frontend-database.js"></script>
+    <script src="frontend-printer.js"></script>
+    <script src="frontend-web.js"></script>
+    <script src="frontend.js?v20230131"></script>
 </body>
 </html>
