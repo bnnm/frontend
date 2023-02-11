@@ -15,22 +15,27 @@
 
 # env vars:
 INFO_JSON_URL=$1
-USER_MAIL=$2
-USER_NAME=$3
+EXTS_JSON_URL=$2
+USER_MAIL=$3
+USER_NAME=$4
 INDEX_JSON=index.json
 INDEXC_JSON=index-clean.json
+EXTS_JSON=exts.json
 INDEX_VERSION=index.version
 
-# get version from helper file
+# get version from helper file (no need to get exts version since they should go in pairs)
 VERSION=$(cat $INDEX_VERSION)
 
 # same from commit but needs a full repo download = worse
 #VERSION=$(git log --pretty=format:%cI "$INDEX_JSON")
 
+# update local files to last date (so can be compared vs server with wget)
 touch -am -c -d $VERSION "$INDEX_JSON"
+touch -am -c -d $VERSION "$EXTS_JSON"
 #echo "$VERSION"
 
 wget -q --timestamp $INDEX_JSON $INFO_JSON_URL
+wget -q --timestamp $EXTS_JSON $EXTS_JSON_URL
 
 
 CHANGED=$(git diff --name-only --exit-code $INDEX_JSON)
@@ -61,6 +66,7 @@ echo $NEW_VERSION > $INDEX_VERSION
 # commit changed files (ignored if not actually changed), so site is re-deployed by github's bots
 git add "$INDEX_VERSION"
 git add "$INDEXC_JSON"
+git add "$EXTS_JSON"
 # no need to update index.json as timestamp is in index.version and generated index-clean.json
 # is now used and updated instead (unused index.json would be deployed as well, bloating the site)
 #git add "$INDEX_JSON"

@@ -30,6 +30,7 @@ jobs:
     - name: Main
       env:
         INFO_JSON_URL: ${{ secrets.INFO_JSON_URL }}
+        EXTS_JSON_URL: ${{ secrets.EXTS_JSON_URL }}
         USER_MAIL: ${{ secrets.USER_MAIL }}
         USER_NAME: ${{ secrets.USER_NAME }}
-      run: sh .updater.sh $INFO_JSON_URL $USER_MAIL $USER_NAME
+      run: sh .updater.sh $INFO_JSON_URL $EXTS_JSON_URL $USER_MAIL $USER_NAME
