@@ -30,7 +30,7 @@ function Web(cfg, db, pt) {
     $paths.addEventListener('click', (event) => {
         // use current url and cancel to avoid refreshing the whole app
         update_browser_url(event.target.href);
-        load_page();
+        load_path();
         event.preventDefault();
     });
 
@@ -96,8 +96,10 @@ function Web(cfg, db, pt) {
     window.addEventListener('popstate', (event) => {
         //close_overlay(); //TODO: improve
         document.body.classList.remove('overlayed');
-        load_params();
-        submit();
+
+        load_path();
+        //load_params();
+        //submit();
 
         //TODO: not current
         //console.log("pop", event.state, event.state.curr_x, event.state.curr_y);
@@ -107,7 +109,7 @@ function Web(cfg, db, pt) {
 
 
     // initial action is to display results
-    load_page();
+    load_path();
 
     // based on browser url
     async function submit(direct_submit) {
@@ -119,6 +121,7 @@ function Web(cfg, db, pt) {
         let set = $fset.value;
         if (!set || direct_submit)
             show_results();
+
         if (set)
             submit_current_set();
     }
@@ -198,6 +201,7 @@ function Web(cfg, db, pt) {
 
     function load_params() {
         //$form.reset(); //no good in hidden fields
+        $fpath.value = '';
         $ftext.value = '';
         $fsite.value = '';
         $fpage.value = '';
@@ -212,13 +216,13 @@ function Web(cfg, db, pt) {
             }
         }
     }
-    
+
     function handle_errors(error) {
         pt.print_error("Couldn't load data :(");
         console.error('handle_errors:', error);
     }
 
-    async function load_page() {
+    async function load_path() {
         load_params();
 
         await load_sets(); //always preload index
