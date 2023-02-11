@@ -3,7 +3,7 @@
 "use strict";
 var ns_db = new function() {
 
-// index item example:
+// index set example:
 //{"size": 123456789, "subdomain": 'xxx', "inode": 123, "name": "(path)/(name)", "modified": "2000-01-01 10:10"},
 
 class Database {
@@ -26,7 +26,7 @@ class Database {
     }
 
     // setup exts .json
-    init_exts(sets) {
+    init_exts(exts) {
         this._exts = exts;
 
         //new ExtsSetup(this._cfg, this_exts).prepare();
@@ -143,6 +143,22 @@ class Database {
         return true;
     }
 
+    _is_match_ext(ext, set) {
+        if (!ext)
+            return true;
+        let inode = set['inode']
+
+        let set_exts = this._exts['sets'][inode]
+        if (!set_exts) {
+            // possible for useless files not in index, like hoot stuff
+            //let name = set['name']
+            //throw new Error(`inode ${inode} not found in ${name}`);
+            return false;
+        }
+
+        return set_exts.includes(ext);
+    }
+
     _get_terms(text) {
         text = text.toLowerCase()
 
@@ -183,13 +199,17 @@ class Database {
 
             let term_ok = this._is_match_terms(terms, set);
             let site_ok = this._is_match_site(q.site, set);
+            let ext_ok = this._is_match_ext(q.ext, set);
 
-            if (term_ok && site_ok) {
+            if (term_ok && site_ok && ext_ok) {
                 this.results.push(set);
             }
 
-            // adding site_ok will hide other subdomains
-            if (term_ok /*&& site_ok*/ || q.showRecent) {
+            // decide if this set is counted in for system totals in results, depending on current filters
+            // adding site_ok would hide other subdomains
+            let subdomain_ok = q.showRecent || term_ok && ext_ok;
+
+            if (subdomain_ok) {
                 this._include_subdomain(set);
             }
         });
@@ -231,6 +251,39 @@ class Database {
             this.subdomains[sd] = 0;
         this.subdomains[sd] += 1;
     }
+
+    query_exts() {
+        this.results = this._exts['totals']; // sorted on view
+    }
+}
+
+
+function get_sizetype(sizebytes) {
+    let size = sizebytes;
+    let type = '';
+
+    if (size < 1000) {
+        type = 'B';
+    }
+    else {
+        size = size / 1024;
+        if (size < 1000) {
+            type = 'KB';
+        }
+        else {
+            size = size / 1024;
+            if (size < 1000) {
+                type = 'MB';
+            }
+            else {
+                size = size / 1024;
+                type = 'GB';
+            }
+        }
+        size = size.toFixed(2);
+    }
+
+    return `${size}${type}`;
 }
 
 // prepares index list for queries
@@ -328,36 +381,6 @@ class DataSetup {
     }
 }
 
-
-function get_sizetype(sizebytes) {
-    let size = sizebytes;
-    let type = '';
-
-    if (size < 1000) {
-        type = 'B';
-    }
-    else {
-        size = size / 1024;
-        if (size < 1000) {
-            type = 'KB';
-        }
-        else {
-            size = size / 1024;
-            if (size < 1000) {
-                type = 'MB';
-            }
-            else {
-                size = size / 1024;
-                type = 'GB';
-            }
-        }
-        size = size.toFixed(2);
-    }
-
-    return `${size}${type}`;
-}
-
-
 class FilelistSetup {
     constructor(cfg, set, filelist) {
         this._cfg = cfg;
@@ -389,9 +412,10 @@ class FilelistSetup {
             }
             // after loading dir/name
             let ext = this._extract_ext(set, file);
+            ext = ext.toLowerCase();
             if (!filelist.extensions.includes(ext))
                 filelist.extensions.push(ext);
-            if (cfg.DB_EXTS_LESSER.includes(ext))
+            if (cfg.DB_FILELIST_EXTS_LESSER.includes(ext))
                 file.lesser = true;
         }
 

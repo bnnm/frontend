@@ -11,6 +11,7 @@ const $_cl = (node, className) => node.getElementsByClassName(className)[0];
 function Templates() {
     this.results_recent = $_id('tpl-results-recent');
     this.results_search = $_id('tpl-results-search');
+    this.path_exts = $_id('tpl-path-exts');
     this.systems = $_id('tpl-systems');
     this.system = $_id('tpl-system');
     this.urls = $_id('tpl-urls');
@@ -21,6 +22,9 @@ function Templates() {
     this.page_prev = $_id('tpl-page-prev');
     this.page_next = $_id('tpl-page-next');
     this.page_more = $_id('tpl-page-more');
+    this.exts = $_id('tpl-exts');
+    this.exts_section = $_id('tpl-exts-section');
+    this.ext = $_id('tpl-ext');
     this.filelist = $_id('tpl-filelist');
     this.filelist_main = $_id('tpl-filelist-main');
     this.filelist_info = $_id('tpl-filelist-info');
@@ -44,6 +48,8 @@ function Printer(cfg, db) {
     let $form = $_id('searchform');
     let $fsite = $form['site'];
     let $fpage = $form['page'];
+    let $fexts = $form['exts'];
+
     const tpl = new Templates();
     
     function get_blank() {
@@ -84,26 +90,7 @@ function Printer(cfg, db) {
         return page;
     }
 
-    function print_page_common($results, separator) {
-        let $systems = tpl.get(tpl.systems);
-        let $urls = tpl.get(tpl.urls);
-        let $pagination = tpl.get(tpl.pagination);
-
-        let sets = db.results;
-        let sites =  db.subdomains;
-        let page = get_page(sets);
-
-        fill_results_search($results, sets);
-        fill_systems($systems, sites);
-        fill_urls($urls, sets, page, separator);
-        fill_pagination($pagination, sets, page);
-
-        clean_content();
-        $content.appendChild($results);
-        $content.appendChild($systems);
-        $content.appendChild($urls);
-        $content.appendChild($pagination);
-    }
+    ///////////////////////////////////////////////////////////////////////////
 
     this.print_loader = function ()  {
         let $results = tpl.get(tpl.results_recent);
@@ -116,6 +103,46 @@ function Printer(cfg, db) {
         // should be deleted when printing
     }
 
+    this.print_error = function (msg) {
+        let $error = tpl.get(tpl.error_text);
+        
+        clean_content();
+        $error.textContent = msg;
+        $content.appendChild($error);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    function print_page_common($results, separator) {
+        let $systems = tpl.get(tpl.systems);
+        let $exts = tpl.get(tpl.exts);
+        let $urls = tpl.get(tpl.urls);
+        let $pagination = tpl.get(tpl.pagination);
+
+        let sets = db.results;
+        let sites =  db.subdomains;
+        let page = get_page(sets);
+
+        clean_content();
+
+        fill_results_search($results, sets);
+        $content.appendChild($results);
+
+        fill_systems($systems, sites);
+        $content.appendChild($systems);
+
+        if ($fexts.value) {
+            fill_exts($exts);
+            $content.appendChild($exts);
+        }
+
+        fill_urls($urls, sets, page, separator);
+        $content.appendChild($urls);
+
+        fill_pagination($pagination, sets, page);
+        $content.appendChild($pagination);
+    }
+
     this.print_recent = function () {
         let $results = tpl.get(tpl.results_recent);
         print_page_common($results, true);
@@ -125,28 +152,6 @@ function Printer(cfg, db) {
         let $results = tpl.get(tpl.results_search);
         print_page_common($results, false);
     }
-
-    this.print_filelist = function () {
-        let $filelist = tpl.get(tpl.filelist);
-        $filelist.id = 'overlay';
-
-        fill_filelist($filelist, db.set, db.filelist);
-
-        clean_overlay();
-        $content.appendChild($filelist);
-    }
-   
-    this.print_error = function (msg) {
-        let $error = tpl.get(tpl.error_text);
-        
-        clean_content();
-        $error.textContent = msg;
-        $content.appendChild($error);
-    }
-
-    
-    
-    ///////////////////////////////////////////////////////////////////////////
 
     function fill_results_search($results, results) {
         let $texts = $results.getElementsByClassName('text');
@@ -164,7 +169,6 @@ function Printer(cfg, db) {
             })
             .forEach(element => {
                 let $system = tpl.get(tpl.system);
-                let $blank = get_blank();
                 let subdomain = element[0];
                 let total = element[1];
 
@@ -176,9 +180,20 @@ function Printer(cfg, db) {
                     $system.classList.add('selected');
 
                 $block.appendChild($system);
-                $block.appendChild($blank); //nowrap oddities
+                $block.appendChild(get_blank()); //nowrap oddities
             }
         );
+    }
+
+    function fill_exts($block) {
+        let current = $fexts.value;
+
+        let $ext = tpl.get(tpl.ext);
+        $ext.dataset.ext = current;
+        $ext.textContent = current;
+
+        $block.appendChild($ext);
+        $block.appendChild(get_blank()); //nowrap oddities
     }
 
     function fill_urls($block, sets, page, separator) {
@@ -280,6 +295,97 @@ function Printer(cfg, db) {
         $block.appendChild($next);
     }
 
+    ///////////////////////////////////////////////////////////////////////////
+
+    this.print_path_exts = function () {
+        let $exts = tpl.get(tpl.path_exts);
+
+        let exts = db.results;
+        fill_path_exts($exts, exts);
+
+        clean_content();
+        $content.appendChild($exts);
+    }
+    
+    function fill_path_exts2($block, exts) {
+        let current = $fexts.value;
+        exts.forEach(element => {
+            let $ext = tpl.get(tpl.ext);
+            let ext = element[0];
+            let total = element[1];
+
+            $ext.dataset.ext = ext;
+            $ext.textContent = ext + ' · ' + total;
+            if (current && current == ext) // can't mark extension-less as selected tho
+                $ext.classList.add('selected');
+
+            let class_type = cfg.PT_TOTALS_EXT_TYPE[ext]
+            if (class_type)
+                $ext.classList.add(class_type);
+
+            $block.appendChild($ext);
+            $block.appendChild(get_blank()); //nowrap oddities
+        });
+    }
+
+    function fill_path_exts($block, exts) {
+        let current = $fexts.value;
+
+        // prepare sub-sections
+        let $sections = { }
+        Object.keys(cfg.PT_TOTALS_TYPES_INFO).forEach(key => {
+            let $section = tpl.get(tpl.exts_section)
+
+            let $info = $section.getElementsByClassName('info-section')[0];
+            $info.textContent = cfg.PT_TOTALS_TYPES_INFO[key];
+
+            $sections[key] = $section;
+        });
+
+        // read exts and put into sections
+        Object.entries(exts)   // [key,val] array
+            .sort((a, b) => {
+                return b[1] - a[1];     //sort by value (total sets)
+            })
+            .forEach(element => {
+                let $ext = tpl.get(tpl.ext);
+                let ext = element[0];
+                let total = element[1];
+
+                $ext.dataset.ext = ext;
+                $ext.textContent = ext + ' · ' + total;
+                if (current && current == ext) // can't mark extension-less as selected tho
+                    $ext.classList.add('selected');
+
+                let type = cfg.PT_TOTALS_EXT_TYPE[ext]
+                if (type)
+                    $ext.classList.add(type);
+                else
+                    type = ''; //default
+
+                let $section = $sections[type];
+                $section.appendChild($ext);
+                $section.appendChild(get_blank()); //nowrap oddities
+        });
+
+        // fill block
+        Object.keys($sections).forEach(key => {
+            $block.appendChild($sections[key]);
+        });
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    this.print_filelist = function () {
+        let $filelist = tpl.get(tpl.filelist);
+        $filelist.id = 'overlay';
+
+        fill_filelist($filelist, db.set, db.filelist);
+
+        clean_overlay();
+        $content.appendChild($filelist);
+    }
+   
     // {"type": "7z", "size": 1213797, "method": "LZMA2:1536k", "solid": true, "files": [
     //   {"name": "name.ext", "size": 123, "time": "2011-06-03 05:40:56", "crc": "F5E2CDC0"}, 
     // ]
@@ -355,6 +461,9 @@ function Printer(cfg, db) {
 
         $block.appendChild($main);
     }
+    
+    ///////////////////////////////////////////////////////////////////////////
+
 }
 
 

@@ -9,12 +9,15 @@ const $_id = (id) => document.getElementById(id);
 function Web(cfg, db, pt) {
     let $banana = $_id('banana');
     let $main = $_id('main');
+    let $paths = $_id('paths');
 
     let $form = $_id('searchform');
+    let $fpath = $form['path'];
     let $ftext = $form['text'];
     let $fsite = $form['site'];
     let $fpage = $form['page'];
     let $fset  = $form['set'];
+    let $fexts = $form['exts'];
 
     let last_target = null;
 
@@ -23,16 +26,26 @@ function Web(cfg, db, pt) {
         document.body.classList.toggle('banana');
     });
 
+    // navigation
+    $paths.addEventListener('click', (event) => {
+        // use current url and cancel to avoid refreshing the whole app
+        update_browser_url(event.target.href);
+        load_page();
+        event.preventDefault();
+    });
+
     // tag, pagination
     $main.addEventListener('click', (event) => {
-        if (!event.target.matches('[data-site], [data-page], [data-set]'))
+        if (!event.target.matches('[data-site], [data-page], [data-set], [data-ext]'))
             return;
         let ds = event.target.dataset;
 
         enable_effects(event.target);
 
         //TODO: call reset function?
+        $fpath.value = '';
         $fset.value = '';
+        //$fexts.value = '';
 
         let site = ds.site;
         if (site !== undefined) {
@@ -53,6 +66,13 @@ function Web(cfg, db, pt) {
             $fset.value = set;
         }
 
+        let ext = ds.ext;
+        if (ext !== undefined) {
+            if (ext === $fexts.value)
+                ext = '';
+            $fexts.value = ext;
+        }
+
         update_browser_url();
         submit();
 
@@ -63,6 +83,7 @@ function Web(cfg, db, pt) {
     // search form
     $form.addEventListener('submit', (event) => {
         //always reset some values when searching via form submit
+        $fpath.value = '';
         $fpage.value = '';
         $fset.value = '';
 
@@ -84,10 +105,16 @@ function Web(cfg, db, pt) {
         //   window.scroll(event.state.curr_x, event.state.curr_y);
     });
 
-    // initial action is to display results
-    load_sets();
 
-    function submit(direct_submit) {
+    // initial action is to display results
+    load_page();
+
+    // based on browser url
+    async function submit(direct_submit) {
+        if ($fexts.value) {
+            await load_main_exts();
+        }
+        
         // clicking on set icon = only show set, reading from URL = show both
         let set = $fset.value;
         if (!set || direct_submit)
@@ -145,23 +172,27 @@ function Web(cfg, db, pt) {
         last_target = null;
     }
 
-    function update_browser_url() {
-        let data = new FormData($form)
-        let params = new URLSearchParams(data);
-
-        // clean empty params (with a copy)
-        [...params.entries()].forEach(([key, value]) => {
-            if (!value) //0 or ''
-                params.delete(key);
-        });
-
+    function update_browser_url(current) {
         let state = {
             //curr_x: 0, //window.pageXOffset,
             //curr_y: document.body.offsetTop //window.pageYOffset,
         }
 
-        let url = params.toString();
-        url = `?${url}`; //force '?'
+        let url = current;
+        if (!url) {
+            let data = new FormData($form)
+            let params = new URLSearchParams(data);
+
+            // clean empty params (with a copy)
+            [...params.entries()].forEach(([key, value]) => {
+                if (!value) //0 or ''
+                    params.delete(key);
+            });
+
+            url = params.toString();
+            url = `?${url}`; //force '?'
+        }
+
         history.pushState(state, null, url);
     }
 
@@ -171,6 +202,7 @@ function Web(cfg, db, pt) {
         $fsite.value = '';
         $fpage.value = '';
         $fset.value = '';
+        $fexts.value = '';
 
         if (location.search) {
             let params = new URLSearchParams(location.search);
@@ -180,62 +212,48 @@ function Web(cfg, db, pt) {
             }
         }
     }
+    
+    function handle_errors(error) {
+        pt.print_error("Couldn't load data :(");
+        console.error('handle_errors:', error);
+    }
 
-    //TODO promises
-    function fetch_data(url, check_loaded, callback) {
-        if (check_loaded()) {
-            console.log("fetch_data done")
-            callback();
-            return;
+    async function load_page() {
+        load_params();
+
+        await load_sets(); //always preload index
+        if ($fpath.value == 'exts') {
+            await load_main_exts();
+            show_main_exts();
+        } else {
+            //await load_sets();
+            //show_results();
+            submit(true);
         }
-
-        pt.print_loader();
-
-        // get json with set info
-        // could save as localStorage, but some browsers limit max size and if
-        // json http cache is properly configured it shouldn't be redownloaded
-        fetch(url)
-            .then((res) => res.json())
-            .then((response) => {
-                callback(response);
-            })
-            .catch((error) => {
-                pt.print_error("Couldn't load data :(");
-                console.error('Fetch error:', error);
-            });
-        
     }
 
-    function load_sets() {
-        fetch_data(
-            cfg.WB_SETS_URL,
-            () => {
-                return db.has_sets();
-            },
-            (response) => {
-                if (response) //not loaded
-                    db.init_index(response);
-                load_params();
-                //show_results();
-                submit(true);
-            }
-        );
+    async function load_sets() {
+        if (db.has_sets())
+            return;
+        try {
+            const response = await fetch(cfg.WB_SETS_URL);
+            const json = await response.json()
+            db.init_index(json);
+        } catch(e) {
+            handle_errors(e);
+        }
     }
 
-    function load_tags() {
-        fetch_data(
-            cfg.WB_EXTS_URL,
-            () => {
-                return db.has_exts();
-            },
-            (response) => {
-                if (response) //not loaded
-                    db.init_exts(response);
-                load_params();
-                //show_results();
-                submit(true);
-            }
-        );
+    async function load_main_exts() {
+        if (db.has_exts())
+            return;
+        try {
+            const response = await fetch(cfg.WB_EXTS_URL);
+            const json = await response.json()
+            db.init_exts(json);
+        } catch(e) {
+            handle_errors(e);
+        }
     }
 
     function load_filelist(set, url) {
@@ -258,10 +276,11 @@ function Web(cfg, db, pt) {
         let q = {
             text: $ftext.value,
             site: $fsite.value,
+            ext: $fexts.value,
             showRecent: false,
         }
 
-        if (!q.text)
+        if (!q.text && !q.ext)
             q.showRecent = true;
         return q;
     }
@@ -276,6 +295,15 @@ function Web(cfg, db, pt) {
             pt.print_search();
     }
 
+    function show_main_exts() {
+        pt.print_loader();
+
+        //let q = get_query();
+        db.query_exts();
+
+        pt.print_path_exts();
+    }
+
     function show_filelist() {
         let q = $fset.value;
         db.query_filelist(q);
@@ -286,14 +314,6 @@ function Web(cfg, db, pt) {
 
         disable_effects();
     }
-/*
-    function show_tags() {
-        //let q = get_query();
-        db.query_tags();
-
-        pt.print_tags();
-    }
-*/
 
     function open_overlay() {
         let $overlay = $_id('overlay');

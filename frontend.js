@@ -11,11 +11,25 @@
 
     CONFIG.DB_FILELISTS_CACHE_MAX = 300;
     CONFIG.DB_FILELISTS_EVICT_NUM = 100;
-    CONFIG.DB_EXTS_LESSER = ['txt','7z','zip','rar','m3u','xml','json','png','jpg','jpeg','exe','ini'];
+    CONFIG.DB_FILELIST_EXTS_LESSER = ['txt','7z','zip','rar','m3u','xml','json','png','jpg','jpeg','exe','ini'];
+
     //CONFIG.DB_EXTS_ARCHIVE = ['7z','zip'];
     CONFIG.DB_REVERSED_SYSTEM = 'cdi'
     CONFIG.DB_REVERSED_TAG_LW = '[amiga]'
-    CONFIG.DB_REVERSED_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune','bp'];
+    CONFIG.DB_REVERSED_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune','bp','jpn','smp','pru2','flac','smpl'];
+
+    let exts_types = {
+        'ext-txt': ['txt','m3u','xml','.xml~','json','ini','cue','txt','sh','bat'],
+        'ext-bin': ['bin','7z','zip','rar','png','jpg','jpeg','exe', 'fev','ktsl2gcbin','bfsar','names','zarc','db'],
+        'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib']
+    }
+    CONFIG.PT_TOTALS_EXT_TYPE = map_exts(exts_types);
+    CONFIG.PT_TOTALS_TYPES_INFO = {
+        '':'standard files',
+        'ext-txt':'text files',
+        'ext-bin':'bin files',
+        'ext-lib':'lib files',
+    };
     CONFIG.PT_PAGE_RESULTS = 100;
     CONFIG.PT_SYSTEM_CONFIG = {
         '2sf': "DS",
@@ -54,6 +68,17 @@
         'switch': "Switch"
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
+
+    function map_exts(exts) {
+        let exts_types = {}
+
+        Object.keys(exts).forEach((type) => {
+             exts[type].forEach((ext) => {
+                exts_types[ext] = type
+            });
+        });
+        return exts_types;
+    }
 
     function main() {
         let db = new ns_db.Database(CONFIG);

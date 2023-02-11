@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex">
     <title>VGM Updates, Search and Stuff</title>
     <!--<link rel="search" type="application/opensearchdescription+xml" title="vgm.hcs64.com" href="opensearch.xml">-->
-    <link href="frontend.css" rel="stylesheet" type="text/css">
+    <link href="frontend.css?v20230211" rel="stylesheet" type="text/css">
     <link rel="icon" type="image/x-icon" href="favicon.ico" sizes="any">
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -17,20 +17,26 @@
 
         <nav class="links">
             <a href="?">Updates</a> ·
-            <!--<a href="?tags" class="add" data-tag="*">Tags</a> ·-->
             <a href="https://vgm-upload.hcs64.com/" target="_blank">Contribute</a> ·
             <a href="https://hcs64.com/" target="_blank">HCS</a> ·
             <a href="https://hcs64.com/mboard/forum.php" target="_blank">Forum</a>
+        </nav>
+
+        <nav class="paths" id="paths">
+            <a href="?path=search">Search</a> ·
+            <a href="?path=exts">Exts</a>
         </nav>
     </header>
 
     <form id="searchform" action=".">
         <span class="search-line">
             <input name="text" placeholder="Go ahead, search away!" type="search" autocomplete="off">
+            <input type="hidden" name="path"/>
             <input type="hidden" name="site"/>
             <input type="hidden" name="page"/>
             <input type="hidden" name="set"/>
-            <input type="hidden" name="tags"/>
+            <input type="hidden" name="exts"/>
+
             <input type="submit" value="Go">
         </span>
 
@@ -53,6 +59,17 @@
         <div id="tpl-results-search" class="results">
             <a href="">#</a>
             <span class="text"></span> results
+        </div>
+
+        <div id="tpl-path-exts" class="info-extensions">
+            <h2>Extensions in sets</h2>
+        </div>
+        <div id="tpl-exts-section">
+            <h2 class="info-section"></h2>
+        </div>
+        <span id="tpl-ext" class="ext tag" data-ext=""></span>
+        <div id="tpl-exts" class="extensions">
+            Current extension:
         </div>
 
         <div id="tpl-systems" class="systems">
@@ -132,9 +149,9 @@
         <h2 class="process-error">This site needs Javascript to work :(</h2>
     </noscript>
 
-    <script src="frontend-database.js"></script>
-    <script src="frontend-printer.js"></script>
-    <script src="frontend-web.js"></script>
-    <script src="frontend.js?v20230131"></script>
+    <script src="frontend-database.js?v20230211"></script>
+    <script src="frontend-printer.js?v20230211"></script>
+    <script src="frontend-web.js?v20230211"></script>
+    <script src="frontend.js?v20230211"></script>
 </body>
 </html>

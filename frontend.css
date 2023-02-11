@@ -10,6 +10,7 @@ body {
 
 .header { font-family:serif; font-size: initial; }
 h1, h2 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
+.info-extensions h2 { font-size: 1em; font-weight: bold; margin: 1em; padding: 0;  }
 
 #banana { cursor: pointer; display:inline-block;  }
 .banana { font-family: serif;   }
@@ -35,6 +36,10 @@ a:visited { color: #551A8B; }
 
 .links { float: right; margin-bottom: 0.5em; }
 .links a:visited { color:#0000EE; }
+
+.paths { clear:both; float: right; margin-bottom: 0.5em; text-align: right; background-color:#f0f0f0; padding: 0.25em 0.5em; border-radius: 5px; }
+.paths a { color: #666; padding: 0.1em 0.25em; _background-color: #f8f8f8; color:#666; }
+.paths a:hover { text-decoration: none; background-color: #666; color:#fff; border-radius: 3px; }
 
 .info { color: #666; font-size: 0.80em; }
 .date { color: #888; }
@@ -103,6 +108,13 @@ a:visited { color: #551A8B; }
     text-decoration: none;
 }        
 
+.info-extensions h2 { font-size: 1em; font-weight: bold; margin: 1em; padding: 0;  }
+.info-extensions .ext { display:inline-block; margin: 0.2em; padding: 0 0.5em; background-color: #fafafa; }
+.info-extensions .ext:hover { background-color: #888; color: white; }
+.info-extensions .ext-txt { color: #999; }
+.info-extensions .ext-lib { color: cadetblue; }
+.info-extensions .ext-bin { color: blueviolet; }
+.info-extensions .info-section::before { content:'🗎'; padding-right: 0.5em; }
 
 .filelist {
     position: fixed; width: 100vx; height: 100vh; top: 0; left: 0; right: 0; bottom: 0;
