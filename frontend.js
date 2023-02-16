@@ -22,8 +22,8 @@
     CONFIG.DB_REVERSED_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune','bp','jpn','smp','pru2','flac','smpl'];
 
     let exts_types = {
-        'ext-txt': ['txt','m3u','xml','xml~','json','ini','cue','sh','bat','ps1','lua'],
-        'ext-bin': ['bin','7z','zip','rar','lzh','png','jpg','jpeg','exe',  'fev','ktsl2gcbin','bfsar','names','zarc','db','lz'],
+        'ext-txt': ['txt','m3u','xml','xml~','json','ini','cue','sh','bat','ps1','lua'], //bms
+        'ext-bin': ['bin','7z','zip','rar','lzh','png','jpg','jpeg','exe',  'fev','ktsl2gcbin','bfsar','brsar','bcsar','bisar','names','zarc','db','lz'],
         'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib']
     }
     CONFIG.PT_TOTALS_EXT_TYPE = map_exts(exts_types);

@@ -306,27 +306,6 @@ function Printer(cfg, db) {
         clean_content();
         $content.appendChild($exts);
     }
-    
-    function fill_path_exts2($block, exts) {
-        let current = $fexts.value;
-        exts.forEach(element => {
-            let $ext = tpl.get(tpl.ext);
-            let ext = element[0];
-            let total = element[1];
-
-            $ext.dataset.ext = ext;
-            $ext.textContent = ext + ' · ' + total;
-            if (current && current == ext) // can't mark extension-less as selected tho
-                $ext.classList.add('selected');
-
-            let class_type = cfg.PT_TOTALS_EXT_TYPE[ext]
-            if (class_type)
-                $ext.classList.add(class_type);
-
-            $block.appendChild($ext);
-            $block.appendChild(get_blank()); //nowrap oddities
-        });
-    }
 
     function fill_path_exts($block, exts) {
         let current = $fexts.value;
@@ -345,7 +324,14 @@ function Printer(cfg, db) {
         // read exts and put into sections
         Object.entries(exts)   // [key,val] array
             .sort((a, b) => {
-                return b[1] - a[1];     //sort by value (total sets)
+                // sort by total sets
+                let totals = b[1] - a[1];
+                if (totals !== 0)
+                    return totals;
+                // sort by text
+                if (a[0] < b[0]) return -1;
+                if (a[0] > b[0]) return 1;
+                return 0;
             })
             .forEach(element => {
                 let $ext = tpl.get(tpl.ext);
