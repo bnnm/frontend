@@ -18,6 +18,7 @@ function Web(cfg, db, pt) {
     let $fpage = $form['page'];
     let $fset  = $form['set'];
     let $fexts = $form['exts'];
+    let $fsort = $form['sort'];
 
     let last_target = null;
 
@@ -36,7 +37,7 @@ function Web(cfg, db, pt) {
 
     // tag, pagination
     $main.addEventListener('click', (event) => {
-        if (!event.target.matches('[data-site], [data-page], [data-set], [data-ext]'))
+        if (!event.target.matches('[data-site], [data-page], [data-set], [data-ext], [data-sort]'))
             return;
         let ds = event.target.dataset;
 
@@ -46,6 +47,7 @@ function Web(cfg, db, pt) {
         $fpath.value = '';
         $fset.value = '';
         //$fexts.value = '';
+        //$fsort.value = '';
 
         let site = ds.site;
         if (site !== undefined) {
@@ -71,6 +73,13 @@ function Web(cfg, db, pt) {
             if (ext === $fexts.value)
                 ext = '';
             $fexts.value = ext;
+        }
+
+        let sort = ds.sort;
+        if (sort !== undefined) {
+            if (sort === $fsort.value)
+                sort = '';
+            $fsort.value = sort;
         }
 
         update_browser_url();
@@ -207,6 +216,7 @@ function Web(cfg, db, pt) {
         $fpage.value = '';
         $fset.value = '';
         $fexts.value = '';
+        $fsort.value = '';
 
         if (location.search) {
             let params = new URLSearchParams(location.search);
@@ -281,11 +291,18 @@ function Web(cfg, db, pt) {
             text: $ftext.value,
             site: $fsite.value,
             ext: $fexts.value,
+            sort: $fsort.value,
             showRecent: false,
         }
 
-        if (!q.text && !q.ext)
+        if (q.sort == cfg.DB_SORT_RECENT) {
             q.showRecent = true;
+        }
+
+        if (!q.text && !q.ext) {
+            q.showRecent = true;
+            q.sort = cfg.DB_SORT_RECENT;
+        }
         return q;
     }
 

@@ -218,11 +218,14 @@ class Database {
         if (q.site && !this.subdomains[q.site])
             this.subdomains[q.site] = 0;
 
-        this._sort_results(q.showRecent);
+        this._sort_results(q.sort);
         this._sort_subdomains();
     }
 
-    _sort_results(by_date) {
+    _sort_results(sort) {
+        let cfg = this._cfg;
+        let by_date = sort == cfg.DB_SORT_RECENT || sort == cfg.DB_SORT_DATE;
+        
         this.results.sort((a, b) => {
             if (by_date) {
                 if (a.modified > b.modified) return -1;

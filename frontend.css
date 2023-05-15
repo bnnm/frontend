@@ -209,3 +209,5 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 }
 
 .process-error { color: red; margin: 2em 0; font-size: 2em; }
+
+.sort-date::after { content:'⧖'; cursor: pointer; }

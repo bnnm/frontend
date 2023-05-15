@@ -16,6 +16,10 @@
         '7z','zip','rar','lzh','png','jpg','jpeg','exe',
     ];
 
+    CONFIG.DB_SORT_RECENT = 'recent';
+    CONFIG.DB_SORT_DATE = 'date';
+    CONFIG.DB_SORT_NAME = 'name';
+
     //CONFIG.DB_EXTS_ARCHIVE = ['7z','zip'];
     CONFIG.DB_REVERSED_SYSTEM = 'cdi'
     CONFIG.DB_REVERSED_TAG_LW = '[amiga]'
