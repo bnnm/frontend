@@ -106,7 +106,7 @@
         <a id="tpl-page-next" class="page-next" data-page="">next</a>
         <span id="tpl-page-more">...</span>
 
-        <div id="tpl-filelist" class="filelist">
+        <div id="tpl-filelist" class="filelist hide-date">
         </div>
 
         <div id="tpl-filelist-main" class="filelist-main">
@@ -121,7 +121,8 @@
         <div id="tpl-filelist-info">
             <p>
                 Type: <span class="types"></span> /
-                Extensions: <span class="extensions"></span>
+                Extensions: <span class="extensions"></span> /
+                Info: <span class="tag toggle-size selected">size</span> <span class="tag toggle-date">date</span>
             </p>
             <p>
                 <span class="total"></span> files contained in this set:
@@ -132,7 +133,8 @@
         <li id="tpl-filelist-item">
             <span class="dir"></span>
             <span class="name"></span>
-            <small class="info"></small>
+            <small class="size"></small>
+            <small class="date"></small>
         </li>
         <span id="tpl-filelist-ext" class="tag extension"></span>
         <span id="tpl-filelist-type" class="type"></span>

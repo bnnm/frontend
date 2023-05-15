@@ -148,9 +148,15 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 
 /* improves text selection */
 .filelist-main ul li { display: flex; }
-.filelist-main ul .info { margin-left: 1em; }
+.filelist-main ul .size,
+.filelist-main ul .date { margin-left: 1em; }
+.filelist-main ul .size,
+.filelist-main ul .date { color: #666; font-size: 0.80em; }
 .filelist-main ul .dir { color:#666 }
 .filelist-main ul .lesser { color:#666 }
+
+.hide-size .filelist-main ul .size,
+.hide-date .filelist-main ul .date { display: none; }
 
 .info-loader {
     opacity:0;

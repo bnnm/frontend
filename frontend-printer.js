@@ -428,13 +428,15 @@ function Printer(cfg, db) {
                 let $item = tpl.get(tpl.filelist_item);
                 let $dir  = $item.getElementsByClassName('dir')[0];
                 let $name = $item.getElementsByClassName('name')[0];
-                let $info = $item.getElementsByClassName('info')[0];
+                let $size = $item.getElementsByClassName('size')[0];
+                let $date = $item.getElementsByClassName('date')[0];
 
                 if (file.dir)
                     $dir.textContent  = `${file.dir}`;
                 $name.textContent = `${file.name}`;
-                $name.title = `${file.time}`;
-                $info.textContent = `${file.sizeview}`;
+                $name.title = `CRC: ${file.crc}`;
+                $size.textContent = `${file.sizeview}`;
+                $date.textContent = `${file.time}`;
 
                 if (file.dupe)
                    $item.classList.add('dupe');

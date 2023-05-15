@@ -341,9 +341,21 @@ function Web(cfg, db, pt) {
 
         document.body.classList.add('overlayed');
         $overlay.addEventListener('click', (event) => {
-            if (!event.target.matches('.filelist-back'))
-                return;
-            close_overlay();
+            let $target = event.target;
+
+            if ($target.matches('.filelist-back')) {
+                close_overlay();
+            }
+
+            if ($target.matches('.toggle-size')) {
+                $overlay.classList.toggle('hide-size');
+                $target.classList.toggle('selected');
+                
+            }
+            if ($target.matches('.toggle-date')) {
+                $overlay.classList.toggle('hide-date');
+                $target.classList.toggle('selected');
+            }
         });
 
         document.addEventListener('keydown', handle_escape);
