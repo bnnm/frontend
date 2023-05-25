@@ -13,6 +13,8 @@ data_new = []
 for set in data:
     if set['name'].endswith('.json'):
         continue
+    if set['name'].endswith('.txt'):
+        continue
 
     # simplify names for a minuscule decrease in size after gzipping
     if IS_SIMPLIFY:
