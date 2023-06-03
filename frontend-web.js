@@ -352,8 +352,20 @@ function Web(cfg, db, pt) {
                 $target.classList.toggle('selected');
                 
             }
+
             if ($target.matches('.toggle-date')) {
                 $overlay.classList.toggle('hide-date');
+                $target.classList.toggle('selected');
+            }
+
+            if ($target.matches('.toggle-ext')) {
+                let ext = $target.dataset.fileext;
+                let $files = $overlay.getElementsByClassName(`hide-${ext}`);
+                for (let $file of $files) {
+                    let $item = $file.closest('.filelist-item')
+                    $item.classList.toggle('hidden');
+                }
+
                 $target.classList.toggle('selected');
             }
         });

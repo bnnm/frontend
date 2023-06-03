@@ -400,6 +400,7 @@ function Printer(cfg, db) {
             for (let extension of extensions) {
                 let $ext = tpl.get(tpl.filelist_ext);
                 $ext.textContent = `${extension}`
+                $ext.dataset.fileext = extension;
                 $extensions.appendChild($ext);
             }
 
@@ -437,6 +438,7 @@ function Printer(cfg, db) {
                 $name.title = `CRC: ${file.crc}`;
                 $size.textContent = `${file.sizeview}`;
                 $date.textContent = `${file.time}`;
+                $name.classList.add(`hide-${file.ext}`);
 
                 if (file.dupe)
                    $item.classList.add('dupe');

@@ -327,7 +327,7 @@ class DataSetup {
         set.basename = basename;
         set.basename_lw = basename.toLowerCase();
 
-        if (basename.endsWith('.json'))
+        if (basename.endsWith('.json') || basename.endsWith('.txt'))
             set.disabled = true;
     }
 
@@ -416,6 +416,8 @@ class FilelistSetup {
             // after loading dir/name
             let ext = this._extract_ext(set, file);
             ext = ext.toLowerCase();
+            file.ext = ext;
+
             if (!filelist.extensions.includes(ext))
                 filelist.extensions.push(ext);
             if (cfg.DB_FILELIST_EXTS_LESSER.includes(ext))

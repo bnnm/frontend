@@ -71,7 +71,9 @@ a:visited { color: #551A8B; }
 }
 .tag:hover { outline: 1px solid #b2dcf9; }
 .tag.selected { color:#000; outline: 1px solid red; }
-.extension { cursor:default; }
+
+.togglables .tag { opacity: 0.5; }
+.togglables .tag.selected { opacity: 1.0; outline: none; }
 
 .type {
     color: #666; border: 1px solid #999; padding: 2px 2px 0; margin: 0 2px;
@@ -155,8 +157,10 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 .filelist-main ul .dir { color:#666 }
 .filelist-main ul .lesser { color:#666 }
 
+.filelist-main .hidden,
 .hide-size .filelist-main ul .size,
-.hide-date .filelist-main ul .date { display: none; }
+.hide-date .filelist-main ul .date { display: none !important; }
+
 
 .info-loader {
     opacity:0;

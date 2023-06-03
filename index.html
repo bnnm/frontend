@@ -120,9 +120,19 @@
 
         <div id="tpl-filelist-info">
             <p>
-                Type: <span class="types"></span> /
-                Extensions: <span class="extensions"></span> /
-                Info: <span class="tag toggle-size selected">size</span> <span class="tag toggle-date">date</span>
+                <span>
+                    Type: <span class="types"></span>
+                </span>
+                /
+                <span class="togglables">
+                    Extensions: <span class="extensions"></span>
+                </span>
+                /
+                <span class="togglables">
+                    Info:
+                    <span class="tag toggle-size selected">size</span>
+                    <span class="tag toggle-date">date</span>
+                </span>
             </p>
             <p>
                 <span class="total"></span> files contained in this set:
@@ -130,13 +140,13 @@
             <ul></ul>
         </div>
 
-        <li id="tpl-filelist-item">
+        <li id="tpl-filelist-item" class="filelist-item">
             <span class="dir"></span>
             <span class="name"></span>
             <small class="size"></small>
             <small class="date"></small>
         </li>
-        <span id="tpl-filelist-ext" class="tag extension"></span>
+        <span id="tpl-filelist-ext" class="tag toggle-ext selected" data-fileext=""></span>
         <span id="tpl-filelist-type" class="type"></span>
         <div id="tpl-filelist-error" class="error">
             Couldn't load list, try again a later/report :(
