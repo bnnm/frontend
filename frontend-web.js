@@ -350,11 +350,15 @@ function Web(cfg, db, pt) {
             if ($target.matches('.toggle-size')) {
                 $overlay.classList.toggle('hide-size');
                 $target.classList.toggle('selected');
-                
             }
 
             if ($target.matches('.toggle-date')) {
                 $overlay.classList.toggle('hide-date');
+                $target.classList.toggle('selected');
+            }
+
+            if ($target.matches('.toggle-crc')) {
+                $overlay.classList.toggle('hide-crc');
                 $target.classList.toggle('selected');
             }
 

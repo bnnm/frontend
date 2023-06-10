@@ -431,13 +431,14 @@ function Printer(cfg, db) {
                 let $name = $item.getElementsByClassName('name')[0];
                 let $size = $item.getElementsByClassName('size')[0];
                 let $date = $item.getElementsByClassName('date')[0];
+                let $crc = $item.getElementsByClassName('crc')[0];
 
                 if (file.dir)
                     $dir.textContent  = `${file.dir}`;
                 $name.textContent = `${file.name}`;
-                $name.title = `CRC: ${file.crc}`;
                 $size.textContent = `${file.sizeview}`;
                 $date.textContent = `${file.time}`;
+                $crc.textContent = `${file.crc}`;
                 $name.classList.add(`hide-${file.ext}`);
 
                 if (file.dupe)
