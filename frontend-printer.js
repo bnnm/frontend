@@ -217,6 +217,10 @@ function Printer(cfg, db) {
                 $block.appendChild($separator);
             }
 
+            if (set.upd) {
+                $url.classList.add('updated')
+            }
+
             let $link = $url.getElementsByTagName('a')[0];
             $link.href = set.url;
             $link.textContent = set.basename;

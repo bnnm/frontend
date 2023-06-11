@@ -94,6 +94,10 @@ a:visited { color: #551A8B; }
     line-height: 1.5em;
 }
 
+.url.updated::after {
+    content:'updated!'; color:#09a0a0; font-size:0.85em; margin-left:0.5em;
+}
+
 .pagination { margin: 2em 0em 1em 0em; }
 .pagination a.disabled { color: #666; pointer-events: none; }
 .pagination a.selected { font-weight: bold; color: #000; pointer-events: none; }
