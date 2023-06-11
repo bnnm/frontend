@@ -47,6 +47,12 @@ fi
 # clean index.json for smaller sizes
 python3 ./.index-cleaner.py
 
+# index.json may change due to txt diffs but final json be the same
+CHANGED=$(git diff --name-only --exit-code $INDEXC_JSON)
+if [ "$CHANGED" != "$INDEXC_JSON" ]; then
+    echo "$INDEXC_JSON: no change (old date: $VERSION)"
+    exit 0
+fi
 
 # get current date = version and overwrite file
 NEW_VERSION=$(date +%Y-%m-%dT%T%z)
