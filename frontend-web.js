@@ -364,7 +364,7 @@ function Web(cfg, db, pt) {
 
             if ($target.matches('.toggle-ext')) {
                 let ext = $target.dataset.fileext;
-                let $files = $overlay.getElementsByClassName(`hide-${ext}`);
+                let $files = $overlay.getElementsByClassName(`hide-ext-${ext}`);
                 for (let $file of $files) {
                     let $item = $file.closest('.filelist-item')
                     $item.classList.toggle('hidden');

@@ -443,7 +443,7 @@ function Printer(cfg, db) {
                 $size.textContent = `${file.sizeview}`;
                 $date.textContent = `${file.time}`;
                 $crc.textContent = `${file.crc}`;
-                $name.classList.add(`hide-${file.ext}`);
+                $name.classList.add(`hide-ext-${file.ext}`);
 
                 if (file.dupe)
                    $item.classList.add('dupe');
