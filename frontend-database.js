@@ -425,13 +425,19 @@ class FilelistSetup {
         }
 
         filelist.files.sort((a, b) => {
-            if (a.dir === undefined)
-                return -1;
-            else if (b.dir === undefined)
-                return 1;
-            let dir_cmp = a.dir.localeCompare(b.dir, 'en', { sensitivity:'base' });
+            if (a.dir || b.dir) {
+                if (a.dir === undefined)
+                    return -1;
+                if (b.dir === undefined)
+                    return 1;
+
+                let dir_cmp = a.dir.localeCompare(b.dir, 'en', { sensitivity:'base' });
+                if (dir_cmp != 0)
+                    return dir_cmp;
+            }
+
             let file_cmp = a.name.localeCompare(b.name, 'en', { sensitivity:'base' });
-            return dir_cmp || file_cmp;
+            return file_cmp;
         });
     }
 
