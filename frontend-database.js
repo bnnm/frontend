@@ -126,6 +126,10 @@ class Database {
                 }
             }
 
+            //don't forget pokéymons (cmp is already normalized)
+            if (term.normalize)
+                term = term.normalize('NFKD').replace(/[\u0300-\u036f]/g, "")
+
             // AND search, unlike original OR, and always partial matches
             if (!cmp.includes(term))
                 return false;
@@ -326,6 +330,8 @@ class DataSetup {
             basename = basename.substring(index + 1);
         set.basename = basename;
         set.basename_lw = basename.toLowerCase();
+        if (set.basename_lw.normalize)
+            set.basename_lw = set.basename_lw.normalize('NFKD').replace(/[\u0300-\u036f]/g, "")
 
         if (basename.endsWith('.json') || basename.endsWith('.txt'))
             set.disabled = true;
