@@ -228,3 +228,9 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 .process-error { color: red; margin: 2em 0; font-size: 2em; }
 
 .sort-date::after { content:'⧖'; cursor: pointer; }
+
+.filelist-main { counter-reset: pageTotal; }
+.filelist-item { counter-increment: pageTotal; }
+.filelist-main:after {  /* needs to go after counting */
+    padding: 0.5em; color: #aaa; font-size: 0.75em; content: "Showing: " counter(pageTotal); 
+}
