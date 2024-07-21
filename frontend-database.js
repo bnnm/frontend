@@ -236,8 +236,16 @@ class Database {
                 if (a.modified < b.modified) return 1;
                 // on equals use name
             }
-            if (a.basename < b.basename) return -1;
-            if (a.basename > b.basename) return 1;
+
+            // hoot zips suck and go last
+            if (a.hoot_zip && !b.hoot_zip)
+                return 1;
+            if (!a.hoot_zip && b.hoot_zip)
+                return -1;
+
+            // order ignoring case
+            if (a.basename_lw < b.basename_lw) return -1;
+            if (a.basename_lw > b.basename_lw) return 1;
             return 0;
         });
     }
@@ -335,6 +343,10 @@ class DataSetup {
 
         if (basename.endsWith('.json') || basename.endsWith('.txt'))
             set.disabled = true;
+
+        let subdomain = set.sd ? set.sd : set.ssubdomain;
+        if (subdomain && subdomain == 'hoot' && basename.endsWith('.zip'))
+            set.hoot_zip = true;
     }
 
     _load_subdomain(set) {
