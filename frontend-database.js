@@ -449,12 +449,12 @@ class FilelistSetup {
                 if (b.dir === undefined)
                     return 1;
 
-                let dir_cmp = a.dir.localeCompare(b.dir, 'en', { sensitivity:'base' });
+                let dir_cmp = a.dir.localeCompare(b.dir, 'en', { sensitivity:'base', numeric: true });
                 if (dir_cmp != 0)
                     return dir_cmp;
             }
 
-            let file_cmp = a.name.localeCompare(b.name, 'en', { sensitivity:'base' });
+            let file_cmp = a.name.localeCompare(b.name, 'en', { sensitivity:'base', numeric: true });
             return file_cmp;
         });
     }
