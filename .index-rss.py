@@ -11,19 +11,12 @@ def get_updates():
     with open('index-clean.json', 'r', encoding='utf-8') as f:
         data = json.load(f)
 
-    #{
-    #   "name": "v/Video Game Name (2000-01-01)(banana soft)[NDS].7z", 
-    #   "subdomain": "2sf", 
-    #   "inode": 12345,
-    #   "modified": "2020-01-01 12:12",
-    #   "size": 614150
-    #},
-
     updates = []
     for set in data:
         name = set['nm']
         subdomain = set['sd']
         text_date = set['md']
+        inode = set['id']
         upd = 'upd' in set and set['upd']
         if not text_date:
             continue
@@ -40,17 +33,23 @@ def get_updates():
                 url_basename = url_basename.replace(val, repl)
         url = 'https://%s.joshw.info/%s%s' % (subdomain, url_dir, url_basename)
 
+        title = os.path.splitext(basename)[0]
+
         description = 'New!'
         if upd:
             description = 'Updated!'
+        if basename.endswith('[old].7z'):
+            description = 'Old!'
         
         date = datetime.datetime.fromisoformat(text_date)
         dumb_date = date.strftime("%a, %d %b %Y %H:%M:%S GMT").strip()
 
-        guid = url + '?date=' + text_date.replace(' ', '_') #unique enough I guess
+        # URL changes when files are renamed so use inodes (though inodes can be reused when files are deleted, happens less often)
+        #guid = url + '?date=' + text_date.replace(' ', '_')
+        guid = 'https://%s.joshw.info/%s%s?date=%s' % (subdomain, url_dir, inode, text_date.replace(' ', '_')) #unique enough I guess
 
         item = {}
-        item['title'] = basename
+        item['title'] = title
         item['link'] = url
         item['description'] = description
         item['date'] = date
