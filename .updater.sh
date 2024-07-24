@@ -21,7 +21,9 @@ USER_NAME=$4
 INDEX_JSON=index.json
 INDEXC_JSON=index-clean.json
 EXTS_JSON=exts.json
+RSS_FILE=rss.xml
 INDEX_VERSION=index.version
+
 
 # get version from helper file (no need to get exts version since they should go in pairs)
 VERSION=$(cat $INDEX_VERSION)
@@ -54,6 +56,10 @@ if [ "$CHANGED" != "$INDEXC_JSON" ]; then
     exit 0
 fi
 
+# create RSS (after checking if index has changed)
+python3 ./.index-rss.py
+
+
 # get current date = version and overwrite file
 NEW_VERSION=$(date +%Y-%m-%dT%T%z)
 
@@ -69,10 +75,12 @@ fi
 
 echo $NEW_VERSION > $INDEX_VERSION
 
+
 # commit changed files (ignored if not actually changed), so site is re-deployed by github's bots
 git add "$INDEX_VERSION"
 git add "$INDEXC_JSON"
 git add "$EXTS_JSON"
+git add "$RSS_XML"
 # no need to update index.json as timestamp is in index.version and generated index-clean.json
 # is now used and updated instead (unused index.json would be deployed as well, bloating the site)
 #git add "$INDEX_JSON"
