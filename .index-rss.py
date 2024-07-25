@@ -58,8 +58,10 @@ def get_updates():
 
         updates.append(item)
 
+    # date desc, name asc (reverse=True reverses both)
+    updates.sort(key=lambda item: (- item['date'].timestamp(), item['title'].lower()))
+    
     # limit
-    updates.sort(key=lambda item: (item['date'], item['title']), reverse=True)
     updates = updates[0: MAX_UPDATES]
 
     return updates

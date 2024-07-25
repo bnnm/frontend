@@ -80,7 +80,7 @@ echo $NEW_VERSION > $INDEX_VERSION
 git add "$INDEX_VERSION"
 git add "$INDEXC_JSON"
 git add "$EXTS_JSON"
-git add "$RSS_XML"
+git add "$RSS_FILE"
 # no need to update index.json as timestamp is in index.version and generated index-clean.json
 # is now used and updated instead (unused index.json would be deployed as well, bloating the site)
 #git add "$INDEX_JSON"
