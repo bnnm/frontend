@@ -72,7 +72,9 @@
         'wsr': "WonderSwan",
         'mobile': "Mobile",
         'cdi': "Other systems",
-        'switch': "Switch"
+        'switch': "Switch",
+        'xone': "Xbox One",
+        'xse': "Xbox Series",
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
 
