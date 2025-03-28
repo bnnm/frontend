@@ -9,6 +9,7 @@ with open('index.json', 'r', encoding='utf-8') as f:
 
 IS_SIMPLIFY = True
 IS_DETECT_UPD = True
+IS_DETECT_FIXABLE = True
 
 sets_new = {}
 sets_old = {}
@@ -56,6 +57,17 @@ for set in data:
             if name_new in sets_old:
                 set_new['upd'] = True
             sets_new[name_new] = set
+
+
+    # detect sets that have a 'fixable' tag sets ("blah [fix-...].7z"
+    if IS_DETECT_UPD:
+        name_base = os.path.splitext(name)[0]
+
+        last_bracket = name_base.rfind('[')
+        if last_bracket > 0:
+            part = name_base[last_bracket:].lower()
+            if part.startswith('[fix-') or part.startswith('[fix '):
+                set['fix'] = True
 
 dump = json.dumps(data_new)
 
