@@ -403,6 +403,11 @@ function Printer(cfg, db) {
         else {
             let $info = tpl.get(tpl.filelist_info);
 
+            if (set.fix) {
+                let $fixable = $_cl($info, 'filelist-fixable')
+                $fixable.classList.remove('hidden');
+            }
+
             let $extensions = $info.getElementsByClassName('extensions')[0];
             let extensions = filelist.extensions;
             for (let extension of extensions) {
