@@ -18,9 +18,11 @@ Also see later guidelines about handling audio banks and bigfiles before splitti
 *vgmstream* can play *many* original formats as-is, plus it's in active development and more formats are being added and fixed. It also has [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) and [TXTP](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTP.md) features that can make many types of odd original data playable without having to transform anything.
 
 #### Exceptions:
-- Sequenced audio (MIDI-like formats found in older generation consoles) can be converted, tagged and uploaded as `.SPC`, `.PSF`, `.2SF`, `.VGM` and such formats
+- Sequenced audio (MIDI-like formats found in older generation consoles) can be converted into formats like `.SPC`, `.PSF`, `.2SF`, `.VGM` and so on, and tagged/renamed freely
 - When ripping CD-DA audio from games you may use a lossless format like FLAC rather than WAV, and it can be freely tagged
 - Videos must be "demuxed" (separate audio data), but don't decode its original audio into `.WAV`
+- Having helper files not part of the game is fine (like `.m3u`, `.txtp`, `!info.txt`, and so on)
+- If you used custom extraction tools or scripts to get audio consider including them (preferably packed like `!extra.7z`), for the benefit of future rippers
 - The rules aren't absolute, various issues are judged case by case
 
 ### Compress sets using .7z archives
@@ -146,6 +148,14 @@ If audio is still (mostly) not playable with no known tool that works, it can be
 If you name them `01-Title.flac`, `02-Boss.flac` and so on it's hard to know if the game really has .FLAC named like that, or it's reordered CD-DA audio.
 
 Instead name them in track order, like `Track02.flac` or `Track02 - Title.flac`, `Track03.flac` and so on, so the origin is clearer.
+
+#### Don't mix games from different platforms
+Some games have different formats per platform (PC vs PS2 vs GameCube).
+
+Some cases files are 99% the same save for a few files.
+
+For now simply upload a separate set per platform and don't make subdir for PC / PS2 / GC with the few different files; there is enough server space to keep them separate.
+
 
 
 ## [Fix - (explanation)] sets
