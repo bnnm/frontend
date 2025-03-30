@@ -4,6 +4,8 @@ When contributing please follow the community-agreed standards explained below.
 
 For help try [HCS64 Discord](https://discord.gg/7ddT4pP) or the HCS64 forums.
 
+To upload new sets use [vgm-upload.hcs64.com/](https://vgm-upload.hcs64.com/). If file is too big post a link on Discord or the forums (if it's small please upload it with that link).
+
 ## Guidelines
 
 ### Include original audio files, as extracted from the games
