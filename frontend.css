@@ -104,9 +104,9 @@ a:visited { color: #551A8B; }
 }
 
 .url.fixable-set a,
-.url.fixable-set a:visited { /*color: #7B3F00;*/ color: #888888; }
+.url.fixable-set a:visited { /*color: #7B3F00; color: #888888;*/ opacity: 0.50; }
 .url.fixable-set .set-line::after {
-    content:'🛠️'; font-size:0.85em; margin-left:0.5em; opacity: 0.5;
+    content:'🛠️'; font-size:0.85em; margin-left:0.5em; opacity: 0.75;
 }
 
 .url.updated .set-line::after {
