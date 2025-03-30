@@ -5,6 +5,13 @@
     <link>https://vgm.hcs64.com/</link>
     <description>VGM Updates</description>
     <item>
+      <title>Gensou Suikoden (1998-03-26)(Konami)[PC]</title>
+      <link>https://pc.joshw.info/g/Gensou%20Suikoden%20(1998-03-26)(Konami)[PC].7z</link>
+      <description>New!</description>
+      <pubDate>Sun, 30 Mar 2025 16:50:00 GMT</pubDate>
+      <guid>https://pc.joshw.info/g/26844555236?date=2025-03-30_16:50</guid>
+    </item>
+    <item>
       <title>Monster Hunter Wilds (2025-02-28)(Capcom)[PC]</title>
       <link>https://pc.joshw.info/m/Monster%20Hunter%20Wilds%20(2025-02-28)(Capcom)[PC].7z</link>
       <description>New!</description>
@@ -75,9 +82,9 @@
       <guid>https://2sf.joshw.info/p/27917471472?date=2025-03-30_13:50</guid>
     </item>
     <item>
-      <title>Devil Kings [Sengoku Basara](2005-10-12)(Capcom Production Studio 4)(Capcom)[PS2][fix - remove base folder, maybe missing files]</title>
-      <link>https://psf2.joshw.info/d/Devil%20Kings%20[Sengoku%20Basara](2005-10-12)(Capcom%20Production%20Studio%204)(Capcom)[PS2][fix%20-%20remove%20base%20folder,%20maybe%20missing%20files].7z</link>
-      <description>Updated!</description>
+      <title>Devil Kings [Sengoku Basara] (2005-10-12)(Capcom Production Studio 4)(Capcom)[PS2][fix - remove base folder, maybe missing files]</title>
+      <link>https://psf2.joshw.info/d/Devil%20Kings%20[Sengoku%20Basara]%20(2005-10-12)(Capcom%20Production%20Studio%204)(Capcom)[PS2][fix%20-%20remove%20base%20folder,%20maybe%20missing%20files].7z</link>
+      <description>New!</description>
       <pubDate>Sun, 30 Mar 2025 12:50:00 GMT</pubDate>
       <guid>https://psf2.joshw.info/d/26844555228?date=2025-03-30_12:50</guid>
     </item>
@@ -89,25 +96,11 @@
       <guid>https://pc.joshw.info/l/26844555225?date=2025-03-30_12:50</guid>
     </item>
     <item>
-      <title>NES Classic Edition (2016-11-10)[Nintendo][NES]</title>
-      <link>https://nsf.joshw.info/n/NES%20Classic%20Edition%20(2016-11-10)[Nintendo][NES].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 30 Mar 2025 12:50:00 GMT</pubDate>
-      <guid>https://nsf.joshw.info/n/26844555229?date=2025-03-30_12:50</guid>
-    </item>
-    <item>
       <title>Chocolat - Maid Cafe Curio (2005-06-30)(Giga)(Alchemist)[PS2]</title>
       <link>https://psf2.joshw.info/c/Chocolat%20-%20Maid%20Cafe%20Curio%20(2005-06-30)(Giga)(Alchemist)[PS2].7z</link>
       <description>Updated!</description>
       <pubDate>Sun, 30 Mar 2025 11:50:00 GMT</pubDate>
       <guid>https://psf2.joshw.info/c/27917444894?date=2025-03-30_11:50</guid>
-    </item>
-    <item>
-      <title>Devil Kings [Sengoku Basara](2005-10-12)(Capcom Production Studio 4)(Capcom)[PS2][fix - remove base folder, maybe missing files][old]</title>
-      <link>https://psf2.joshw.info/d/Devil%20Kings%20[Sengoku%20Basara](2005-10-12)(Capcom%20Production%20Studio%204)(Capcom)[PS2][fix%20-%20remove%20base%20folder,%20maybe%20missing%20files][old].7z</link>
-      <description>Old!</description>
-      <pubDate>Sun, 30 Mar 2025 11:50:00 GMT</pubDate>
-      <guid>https://psf2.joshw.info/d/26844555224?date=2025-03-30_11:50</guid>
     </item>
     <item>
       <title>Dragon Ball GT - Final Bout [Dragon Ball - Final Bout] (1997-08-21)(TOSE)(Bandai)[PS1]</title>
@@ -703,6 +696,13 @@
       <description>New!</description>
       <pubDate>Sun, 23 Mar 2025 20:17:00 GMT</pubDate>
       <guid>https://2sf.joshw.info/f/27917291304?date=2025-03-23_20:17</guid>
+    </item>
+    <item>
+      <title>GoPets - Vacation Island (conv) (2008-03-26)(1st Playable Productions)(Konami)[NDS]</title>
+      <link>https://2sf.joshw.info/g/GoPets%20-%20Vacation%20Island%20(conv)%20(2008-03-26)(1st%20Playable%20Productions)(Konami)[NDS].7z</link>
+      <description>New!</description>
+      <pubDate>Sun, 23 Mar 2025 20:17:00 GMT</pubDate>
+      <guid>https://2sf.joshw.info/g/27917291305?date=2025-03-23_20:17</guid>
     </item>
   </channel>
 </rss>
