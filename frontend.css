@@ -108,6 +108,8 @@ a:visited { color: #551A8B; }
 .url.fixable-set .set-line::after {
     content:'🛠️'; font-size:0.85em; margin-left:0.5em; opacity: 0.75;
 }
+.url.old-set a,
+.url.old-set a:visited { opacity: 0.55; }
 
 .url.updated .set-line::after {
     content:'updated!'; color:#09a0a0; font-size:0.85em; margin-left:0.5em;

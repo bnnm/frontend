@@ -225,6 +225,10 @@ function Printer(cfg, db) {
                 $url.classList.add('fixable-set')
             }
 
+            if (set.fix) {
+                $url.classList.add('old-set')
+            }
+
             let $link = $url.getElementsByTagName('a')[0];
             $link.href = set.url;
             $link.textContent = set.basename;

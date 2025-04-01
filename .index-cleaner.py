@@ -51,6 +51,7 @@ for set in data:
             if set_new:
                 set_new['upd'] = True
             sets_old[name_new] = set
+            set['old'] = True
         else:
             # current is NEW: find if OLD exists
             name_new = name_base
@@ -59,8 +60,8 @@ for set in data:
             sets_new[name_new] = set
 
 
-    # detect sets that have a 'fixable' tag sets ("blah [fix-...].7z"
-    if IS_DETECT_UPD:
+    # detect sets that have a 'fixable' tag ("blah [fix-...].7z")
+    if IS_DETECT_FIXABLE:
         name_base = os.path.splitext(name)[0]
 
         last_bracket = name_base.rfind('[')
