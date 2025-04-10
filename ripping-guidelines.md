@@ -48,7 +48,7 @@ This archive is mainly for music. There are better places and communities to arc
 
 It's good to keep musical SFX like jingles, or banks with music and sfx together, but please don't include folders full of unrelated SFX like explosions or hits.
 
-Ambient audio can be kept if interesting enough (such as creating mood or tension in horror games). If it's just minor or generic stuff (such as river sounds) it can probably be ommited.
+Ambient audio can be kept if interesting enough (such as creating mood or tension in horror games). If it's just minor or generic stuff (such as river sounds) it can probably be omitted.
 
 It's fine to have music and sfx/voices mixed in the same track (such as from videos).
 
@@ -109,7 +109,7 @@ vgmstream supports many kinds of [audio banks and containers](https://github.com
 
 We want to keep *audio formats* untouched. So avoid things like extracting `.hca` from `.awb` and keep companion files like `.acb` (not required to play but have name metadata), or splitting `.fsb` into smaller `.fsb`.
 
-If you just want to extract or split so it's easier to find or play single files, you can use the [TXTP](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTP.md) function to access to any subsong directly. Tools like [this script](https://github.com/vgmstream/vgmstream/blob/master/cli/tools/txtp_maker.py) can create `.TXTP` from audio banks.
+If you just want to extract or split so it's easier to find or play single files, you can use the [TXTP](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTP.md) function to access any subsong directly. Tools like [this script](https://github.com/vgmstream/vgmstream/blob/master/cli/tools/txtp_maker.py) can create `.TXTP` from audio banks.
 
 Sometimes games use *bigfiles* instead of audio banks. If the *bigfile* is a generic or zip-like data container, with nothing audio related, it can be safely extracted. Conversely if it has audio characteristics or contain useful audio metadata, preferably don't split (use [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) or report to get it working).
 
@@ -125,14 +125,14 @@ Also better avoid tons of video that are just voices/sfx or silent.
 #### When updating an existing set (not a full rerip) try to use previous files as a base
 By keeping previous files their older timestamp is preserved. That makes detecting new songs easier.
 
-#### Avoid version numbers in the set name in the set name unless you have a good reason
+#### Avoid version numbers in the set name unless you have a good reason
 Like `Blah (2.0) (...)[...].7z`. This makes automation harder and previous set may not be detected as needing to be removed.
 
 A good reason to have (2.0) is for example when a game changed drastically between versions (basically redone).
 
 New audio was added between versions it should go in the original set, in a N.N version subfolder.
 
-If you need to know if the set is up to date, preferably put put the latest version in a text file. However the set's modified date is often a better way to judge how current it is.
+If you need to know if the set is up to date, preferably put the latest version in a text file. However the set's modified date is often a better way to judge how current it is.
 
 #### Avoid renaming when reuploading existing sets
 If we have `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft)[PC]` don't upload an updated set like `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft Montreal)(Ubisoft)[PC][updated]`  (add *Ubisoft Montreal* to the name).
