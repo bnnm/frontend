@@ -28,7 +28,11 @@ Also see later guidelines about handling audio banks and bigfiles before splitti
 - The rules aren't absolute, various issues are judged case by case
 
 ### Compress sets using .7z archives
-Use *LZMA2* and *non-solid* settings if possible.
+Use `.7z` and *LZMA2*.
+
+For streamed audio (big files) preferably use *non-solid* archive setting, since it decompresses considerably faster.
+
+For sequenced audio it's good to use *solid* archives.
 
 ### Follow the same naming convention as other sets
 Typically: `Game Name in English [name in other region] (Release date as YYYY-MM-DD)(Developer)(Publisher)[Platform].7z`
