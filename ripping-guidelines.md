@@ -43,6 +43,7 @@ Typically: `Game Name in English [name in other region] (Release date as YYYY-MM
   - please add that info **at the end**. 
 - Replace colons with a dash: `Hyrule Warriors: Age of Calamity` turns into `Hyrule Warriors - Age of Calamity`
 - Self-published games use a single descriptor, i.e. `Piczle Colors Demo (2019-01-17)(Rainy Frog)[Switch].7z`.
+- Don't include `Inc.`, `Ltd.` or other minor/useless legal identifiers in developer or publisher names
 
 ### Don't create a "base folder" with the name of the archive.
 Avoid having a `Game (2000-01-01)(Developer)(Publisher)[PC].7z` set that starts with a folder like `/Game (2000-01-01)(Developer)(Publisher)[PC]/`.
