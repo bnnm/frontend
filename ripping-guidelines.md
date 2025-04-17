@@ -60,7 +60,11 @@ It's fine to have music and sfx/voices mixed in the same track (such as from vid
 ### Don't rename the game's files
 We want to preserve how the original files were named when possible.
 
-If you want to "tag" streamed files (playable with *vgmstream*), please use [!tags.m3u](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#tagging) instead of renaming.
+If you want to "tag" streamed files (playable with *vgmstream*), please use [!tags.m3u](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#tagging) instead of renaming. There are other plugins like *foo_external_tags* if you prefer them.
+
+You may also create a `.TXTP` file to . However `.TXTP` tend to be used for more useful (such as adding loop points) and 
+
+Some older sets have renamed files since it was the only option back then, but for new sets please avoid it.
 
 Also generally avoid changing or making up extensions (report unplayable extensions so *vgmstream* can add them) as sometimes causes non-obvious issues. For example Capcom's `.SNGW` is just `.OGG`, but uses a non-standard multichannel order that can't be detected once extension is changed.
 
@@ -77,9 +81,11 @@ For raw data without extension (extracted from bigfiles), using `.vgmstream` + T
 - movie files may be prefixed like `(mov) intro.bik`, however just putting them in a `movie/` subfolder is simpler
 
 ### Try to keep main audio (i.e. not movies) in the root of the 7z archive
-You may add a few folders to organize crowded sets, but there is no need to keep folders 1:1 like the original game.
+You may add a few folders to organize crowded sets, but there is no need to keep folders 1:1 like the original game (folders like `files/audio/bgm/stages/...` don't really benefit much) .
 
-For example, if there are only a few files no point to keep them in a `bgm/` subfolder. A typical layout would be:
+If there are only a few files to begin with no point to keep them in a `bgm/` subfolder, either.
+
+A typical layout would be:
 ```
 bgm01.fsb
 bgm02.fsb
@@ -88,12 +94,14 @@ dlc1/bgm01.fsb
 dlc1/...
 movies/intro.bik
 ```
-Consider adding .m3u or .txtp if main files are in subfolders or must be sorted somehow.
+
+
+Consider adding `.M3U` or `.TXTP` if main files are in subfolders or must be sorted somehow.
 
 ### Don't upload partial updates of sets and instead re-upload the full set with changes
 For example, don't upload a few files from the latest version of the game or the DLC separate from the main set.
 
-Sets should contain all music one could hear a game, rather than having to download a bunch of pieces to get the full thing.
+Sets should contain all music one could hear in a game, rather than having to download a bunch of pieces to get the full thing.
 
 ### Put DLC and updates in subfolders.
 DLC audio that can't be acquired on their own (isn't a separate product) should go together with their parent set.
@@ -112,11 +120,11 @@ This includes putting notes for the uploaders inside sets (requires downloading 
 #### When possible keep audio banks and containers as-is
 vgmstream supports many kinds of [audio banks and containers](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#containers), such as `.fsb`, `.bank`, `.srsa`+`.srst`, `.acb`+`.awb`, etc.
 
-We want to keep *audio formats* untouched. So avoid things like extracting `.hca` from `.awb` and keep companion files like `.acb` (not required to play but have name metadata), or splitting `.fsb` into smaller `.fsb`.
+We want to keep *audio formats* untouched. So avoid things like extracting `.hca` from `.awb` and keep companion files like `.acb` (not required to play, but have name metadata), or splitting `.fsb` into smaller `.fsb`.
 
 If you just want to extract or split so it's easier to find or play single files, you can use the [TXTP](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTP.md) function to access any subsong directly. Tools like [this script](https://github.com/vgmstream/vgmstream/blob/master/cli/tools/txtp_maker.py) can create `.TXTP` from audio banks.
 
-Sometimes games use *bigfiles* instead of audio banks. If the *bigfile* is a generic or zip-like data container, with nothing audio related, it can be safely extracted. Conversely if it has audio characteristics or contain useful audio metadata, preferably don't split (use [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) or report to get it working).
+Games may use simple *bigfiles* instead of actual *audio banks*. If the *bigfile* is just a generic or zip-like data container, with nothing audio related, it can be safely extracted. Conversely if it has audio characteristics, is only used for audio, or contains useful audio metadata, and preferably don't split (use [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) to get it working or report).
 
 For Wwise's `.PCK` it can be considered a virtual filesystem and should be extracted with tools like [this script](https://github.com/bnnm/wwiser-utils/blob/master/scripts/wwise_pck_extractor.bms).
 
