@@ -62,11 +62,9 @@ We want to preserve how the original files were named when possible.
 
 If you want to "tag" streamed files (playable with *vgmstream*), please use [!tags.m3u](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#tagging) instead of renaming. There are other plugins like *foo_external_tags* if you prefer them.
 
-You may also create a `.TXTP` file to . However `.TXTP` tend to be used for more useful (such as adding loop points) and 
-
 Some older sets have renamed files since it was the only option back then, but for new sets please avoid it.
 
-Also generally avoid changing or making up extensions (report unplayable extensions so *vgmstream* can add them) as sometimes causes non-obvious issues. For example Capcom's `.SNGW` is just `.OGG`, but uses a non-standard multichannel order that can't be detected once extension is changed.
+Also generally avoid changing or making up extensions (report unplayable extensions so *vgmstream* can add them), to keep files simple (playable as-is). Sometimes renaming also causes non-obvious issues, for example Capcom's `.SNGW` is just `.OGG`, but uses a non-standard multichannel order that can't be detected once extension is changed.
 
 Some tools however don't extract files with correct extensions to begin with (like using `.WAV` instead of `.WEM`), and should be renamed in that case.
 
@@ -118,13 +116,13 @@ This includes putting notes for the uploaders inside sets (requires downloading 
 ### Other recommendations
 
 #### When possible keep audio banks and containers as-is
-vgmstream supports many kinds of [audio banks and containers](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#containers), such as `.fsb`, `.bank`, `.srsa`+`.srst`, `.acb`+`.awb`, etc.
+*vgmstream* supports many kinds of [audio banks and containers](https://github.com/vgmstream/vgmstream/blob/master/doc/USAGE.md#containers), such as `.fsb`, `.bank`, `.srsa`+`.srst`, `.acb`+`.awb`, etc.
 
 We want to keep *audio formats* untouched. So avoid things like extracting `.hca` from `.awb` and keep companion files like `.acb` (not required to play, but have name metadata), or splitting `.fsb` into smaller `.fsb`.
 
 If you just want to extract or split so it's easier to find or play single files, you can use the [TXTP](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTP.md) function to access any subsong directly. Tools like [this script](https://github.com/vgmstream/vgmstream/blob/master/cli/tools/txtp_maker.py) can create `.TXTP` from audio banks.
 
-Games may use simple *bigfiles* instead of actual *audio banks*. If the *bigfile* is just a generic or zip-like data container, with nothing audio related, it can be safely extracted. Conversely if it has audio characteristics, is only used for audio, or contains useful audio metadata, and preferably don't split (use [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) to get it working or report).
+Games may use simple *bigfiles* instead of actual *audio banks*. If the *bigfile* is just a generic or zip-like data container, with nothing audio related, it can be safely extracted. Conversely if it has audio characteristics, is only used for audio, or contains useful audio metadata, preferably don't split it (use [TXTH](https://github.com/vgmstream/vgmstream/blob/master/doc/TXTH.md) to get it working or report).
 
 For Wwise's `.PCK` it can be considered a virtual filesystem and should be extracted with tools like [this script](https://github.com/bnnm/wwiser-utils/blob/master/scripts/wwise_pck_extractor.bms).
 
@@ -141,11 +139,11 @@ By keeping previous files their older timestamp is preserved. That makes detecti
 #### Avoid version numbers in the set name unless you have a good reason
 Like `Blah (2.0) (...)[...].7z`. This makes automation harder and previous set may not be detected as needing to be removed.
 
-A good reason to have (2.0) is for example when a game changed drastically between versions (basically redone).
+A good reason to have (2.0) is for example when a game's audio changed drastically between versions (basically redone).
 
-New audio was added between versions it should go in the original set, in a N.N version subfolder.
+New audio added between versions should go in the original set, possibly in a N.N version subfolder if sizeable enough.
 
-If you need to know if the set is up to date, preferably put the latest version in a text file. However the set's modified date is often a better way to judge how current it is.
+If you want to show that the set is up to date, best put that version in a text file. However, the set's modified date is often a better way to judge how current it is.
 
 #### Avoid renaming when reuploading existing sets
 If we have `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft)[PC]` don't upload an updated set like `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft Montreal)(Ubisoft)[PC][updated]`  (add *Ubisoft Montreal* to the name).
@@ -162,7 +160,7 @@ If audio is still (mostly) not playable with no known tool that works, it can be
 #### CD-DA sets should keep original track number
 If you name them `01-Title.flac`, `02-Boss.flac` and so on it's hard to know if the game really has .FLAC named like that, or it's reordered CD-DA audio.
 
-Instead name them in track order, like `Track02.flac` or `Track02 - Title.flac`, `Track03.flac` and so on, so the origin is clearer.
+Instead name them in track order, like `Track02.flac` or `Track02 - Title.flac`, `Track03.flac` and so on, so the origin is clearer. You can use a `.m3u` to reorder if needed.
 
 #### Don't mix games from different platforms
 Some games have different formats per platform (PC vs PS2 vs GameCube).
@@ -172,15 +170,14 @@ Some cases files are 99% the same save for a few files.
 For now simply upload a separate set per platform and don't make subdir for PC / PS2 / GC with the few different files; there is enough server space to keep them separate.
 
 
-
 ## [Fix - (explanation)] sets
-Sets that don't follow the guidelines may be accepted and marked like `Game (yyyy-mm-dd)(Dev)(Publisher)[PC][fix - remove base folder]`, and shown a bit differently in the frontend.
+Sets that don't follow the guidelines may be accepted and marked like `Game (yyyy-mm-dd)(Dev)(Publisher)[PC][fix - remove base folder]`, and are shown a bit differently in the frontend.
 
 That would mean there is a base folder inside the set (like `/Game (yyyy-mm-dd)(Dev)(Publisher)[PC]/`) that should be removed, as per the above guidelines.
 
 Anybody may fix it and upload a fixed set like this: `Game (yyyy-mm-dd)(Dev)(Publisher)[PC][fixed].7z`.
 
-If the (explanation) is a mistake, please tell us in Discord or forums so we can recheck again. Sometimes it's hard to assess if the set is really correct. These tags are added not call you out personally, but simply as a reminder of something that can be improved.
+If the *(explanation)* is a mistake, please tell us in Discord or forums so we can recheck again. Sometimes it's hard to assess if the set is really correct. These tags are added not call you out personally, but simply as a reminder of something that can be improved.
 
 
 ## Rationale
