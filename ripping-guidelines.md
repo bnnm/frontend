@@ -71,12 +71,15 @@ Some tools however don't extract files with correct extensions to begin with (li
 For raw data without extension (extracted from bigfiles), using `.vgmstream` + TXTH is a good compromise.
 
 #### Exceptions:
+- bigfiles/zip-like containers may contain names; try to use them if possible
 - for files inside bigfiles without filenames, use recognizable patterns like `(container-name)_(file-number).(extension)`.
 - when moving files in a bunch of directories into root, you may put the tilde-separated path into the name, e.g. `level1~action.mus`
 - you may change common extensions that get hijacked by players to our designated fake ones if necessary (e.g. `.OGG` -> `.LOGG`, `.WAV` > `.LWAV`, etc)
 - you may name `.TXTP`, `.*SF` and other fake formats you create anything
 - differing tracks between regional versions in the same dir may use suffix indicating region in square brackets, e.g. `track1 [US].mus`
 - movie files may be prefixed like `(mov) intro.bik`, however just putting them in a `movie/` subfolder is simpler
+- mobile games sometimes download files then rename them to a hashed name; should be renamed to the original name if possible
+
 
 ### Try to keep main audio (i.e. not movies) in the root of the 7z archive
 You may add a few folders to organize crowded sets, but there is no need to keep folders 1:1 like the original game (folders like `files/audio/bgm/stages/...` don't really benefit much) .
@@ -96,10 +99,12 @@ movies/intro.bik
 
 Consider adding `.M3U` or `.TXTP` if main files are in subfolders or must be sorted somehow.
 
-### Don't upload partial updates of sets and instead re-upload the full set with changes
+### Don't upload partial updates and instead re-upload the full set with changes
 For example, don't upload a few files from the latest version of the game or the DLC separate from the main set.
 
 Sets should contain all music one could hear in a game, rather than having to download a bunch of pieces to get the full thing.
+
+Similarly don't upload just !tags.m3u or some tiny part you want to update, just go ahead and reupload the whole thing.
 
 ### Put DLC and updates in subfolders.
 DLC audio that can't be acquired on their own (isn't a separate product) should go together with their parent set.
