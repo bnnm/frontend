@@ -8,6 +8,7 @@ const $_id = (id) => document.getElementById(id);
 
 function Web(cfg, db, pt) {
     let $banana = $_id('banana');
+    let $darkmode = $_id('dark-banana');
     let $main = $_id('main');
     let $paths = $_id('paths');
 
@@ -22,9 +23,14 @@ function Web(cfg, db, pt) {
 
     let last_target = null;
 
-    // debug features
+    // debug mode
     $banana.addEventListener('click', (event) => {
-        document.body.classList.toggle('banana');
+        toggle_theme('theme-banana');
+    });
+
+    // dark mode
+    $darkmode.addEventListener('click', (event) => {
+        toggle_theme('theme-dark');
     });
 
     // navigation
@@ -116,6 +122,9 @@ function Web(cfg, db, pt) {
         //   window.scroll(event.state.curr_x, event.state.curr_y);
     });
 
+
+    // load theme
+    load_theme()
 
     // initial action is to display results
     load_path();
@@ -400,6 +409,35 @@ function Web(cfg, db, pt) {
 
         document.removeEventListener('keydown', handle_escape);
     }
+
+
+    function toggle_theme(theme_class) {
+        const themes_classes = ['theme-light', 'theme-dark', 'theme-banana'];
+        console.log("toggle");
+
+        if (document.body.classList.contains(theme_class)) {
+            document.body.classList.remove(theme_class);
+            localStorage.removeItem('theme');
+        }
+        else {
+            document.body.classList.remove(...themes_classes);
+            document.body.classList.add(theme_class);
+            localStorage.setItem('theme', theme_class);
+        }
+    }
+
+    function load_theme() {
+        const user_theme  = localStorage.getItem('theme');
+        const systemPrefersDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        console.log("load");
+        if (user_theme) {
+            toggle_theme(user_theme);
+        } else if (systemPrefersDark) {
+            toggle_theme('theme-dark');
+        }
+    }
+
 }
 
 

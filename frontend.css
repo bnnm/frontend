@@ -13,18 +13,20 @@ body {
 h1, h2 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
 .info-extensions h2 { font-size: 1em; font-weight: bold; margin: 1em; padding: 0;  }
 
-#banana { cursor: pointer; display:inline-block;  }
-.banana { font-family: serif;   }
-.banana .header a { font-size:1.00em; }
-.banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; }
-.banana a { color:rgb(9, 105, 218); font-size:1.05em; }
-.banana .systems,
-.banana .pagination { user-select: none; }
+#banana { cursor: pointer; display:inline-block; }
 #banana:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+#dark-banana { cursor: pointer; display:inline-block;  filter: grayscale(100%); }
+#dark-banana:hover { animation: spin-back 2s linear infinite; animation-delay: 1s; }
+@keyframes spin-back {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
 
 a { color: #0000ee; cursor: pointer; text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -263,29 +265,34 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
     padding: 1em;
 }
 
+/* TODO: use CSS variables? */
+.theme-banana { font-family: serif;   }
+.theme-banana .header a { font-size:1.00em; }
+.theme-banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; }
+.theme-banana a { color:rgb(9, 105, 218); font-size:1.05em; }
+.theme-banana .systems,
+.theme-banana .pagination { user-select: none; }
 
-@media (prefers-color-scheme: dark) {
-    body { background-color: #323339; color: #DDDEE0; }    
-    input { background-color: #28292E; color: #898A92;  }
 
-    .tag { background-color: #393a41; color: #c0c0c0; }
-    .tag.selected { color: #e0e0e0; }
-    .info-extensions .ext { background-color: #393a41; }
-    
-    .type { background-color: #494a51; color: #a0a0a0;  }
+/*@media (prefers-color-scheme: dark) {*/
+.theme-dark { background-color: #323339; color: #DDDEE0; }    
+.theme-dark input { background-color: #28292E; color: #898A92;  }
+.theme-dark    .tag { background-color: #393a41; color: #c0c0c0; }
+.theme-dark    .tag.selected { color: #e0e0e0; }
+.theme-dark    .info-extensions .ext { background-color: #393a41; }
+.theme-dark .type { background-color: #494a51; color: #a0a0a0;  }
+.theme-dark a { color: #7AAFF4; }
+.theme-dark    a:visited { color: #5e8aca; }
 
-    a { color: #7AAFF4; }
-    a:visited { color: #5e8aca; }
+.theme-dark    .links a:visited { color:#7AAFF4; }
 
-    .links a:visited { color:#7AAFF4; }
+.theme-dark    .paths { background-color:#414248; }
+.theme-dark    .paths a { color: #999; }
 
-    .paths { background-color:#414248; }
-    .paths a { color: #999; }
+.theme-dark    .filelist-main { background-color: #323339; color: #DDDEE0; border-color: #666; }
+.theme-dark    .filelist-back { background-color: #898A92; }
 
-    .filelist-main { background-color: #323339; color: #DDDEE0; border-color: #666; }
-    .filelist-back { background-color: #898A92; }
-
-    .pagination a { color: #999; }
-    .pagination a:hover { background-color: #454545; }
-    .pagination a.selected { color: #ccc; }
-}
+.theme-dark    .pagination a { color: #999; }
+.theme-dark    .pagination a:hover { background-color: #454545; }
+.theme-dark    .pagination a.selected { color: #ccc; }
+/*}*/
