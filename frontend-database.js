@@ -172,6 +172,8 @@ class Database {
 
         // split by spaces not in quotes
         let temp_terms = text.match(/"[^"]*"|\S+/g);
+        if (!temp_terms)
+            return [];
 
         // cleanup to final list and split again if needed
         let terms = [];
