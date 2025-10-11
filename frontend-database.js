@@ -160,6 +160,10 @@ class Database {
             return false;
         }
 
+        let cfg = this._cfg;
+        if (ext == cfg.EXTS_EXTENTIONLESS)
+            ext = ''
+
         return set_exts.includes(ext);
     }
 

@@ -350,9 +350,12 @@ function Printer(cfg, db) {
                 let ext = element[0];
                 let total = element[1];
 
+                if (ext == '') // allows detection
+                    ext = cfg.EXTS_EXTENTIONLESS
+
                 $ext.dataset.ext = ext;
                 $ext.textContent = ext + ' · ' + total;
-                if (current && current == ext) // can't mark extension-less as selected tho
+                if (current && current == ext)
                     $ext.classList.add('selected');
 
                 let type = cfg.PT_TOTALS_EXT_TYPE[ext]

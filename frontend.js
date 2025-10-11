@@ -26,7 +26,7 @@
     CONFIG.DB_REVERSED_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune','bp','jpn','smp','pru2','flac','smpl'];
 
     let exts_types = {
-        'ext-txt': ['txt','m3u','xml','xml~','json','ini','cue','sh','bat','ps1','lua'], //bms
+        'ext-txt': ['!tags.m3u','txt','m3u','xml','xml~','json','ini','cue','sh','bat','ps1','lua'], //bms
         'ext-bin': ['bin','7z','zip','rar','lzh','png','jpg','jpeg','exe',  'fev','ktsl2gcbin','bfsar','brsar','bcsar','bisar','names','zarc','db','lz'],
         'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib']
     }
@@ -77,6 +77,8 @@
         'xse': "Xbox Series",
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
+
+    CONFIG.EXTS_EXTENTIONLESS = '(extensionless)'
 
     function map_exts(exts) {
         let exts_types = {}
