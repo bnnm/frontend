@@ -126,7 +126,7 @@ class Database {
                 }
             }
 
-            //don't forget pokéymons (cmp is already normalized)
+            // don't forget pokéymons (cmp is already normalized)
             if (term.normalize)
                 term = term.normalize('NFKD').replace(/[\u0300-\u036f]/g, "")
 
@@ -170,24 +170,36 @@ class Database {
     _get_terms(text) {
         text = text.toLowerCase()
 
-        // convert text into an array
-        let terms = text.match(/\\?.|^$/g).reduce((accu, curr) => {
-                if (curr === '"') {
-                    accu.quote ^= 1;
-                } else if(!accu.quote && curr === ' ') {
-                    accu.out.push('');
-                } else {
-                    accu.out[accu.out.length - 1] += curr.replace(/\\(.)/, "$1");
+        // split by spaces not in quotes
+        let temp_terms = text.match(/"[^"]*"|\S+/g);
+
+        // cleanup to final list and split again if needed
+        let terms = [];
+        temp_terms.forEach(part => {
+            if (part.startsWith('"') && part.endsWith('"')) {
+                // remove quotes if present
+                part = part.slice(1, -1);
+                terms.push(part);
+            }
+            else {
+                part = part.replace(/[\/\\]/g, ' ');
+
+                // clean "game:subtitle"
+                if (!part.startsWith(':')) {
+                    part = part.replace(/:/g, ' ');
                 }
-                return accu;
-            }, {out: ['']}
-        ).out;
 
-        //TODO improve and pre-convert to objects
+                // split again if new spaces were introduced and remove falsies
+                if (part.includes(' ')) {
+                    terms.push(...part.split(/\s+/).filter(Boolean));
+                }
+                else {
+                    terms.push(part);
+                }
+            }
+        });
 
-        //let terms = {}
-        //terms.values = terms;
-
+        console.log(terms);
         return terms;
     }
 
