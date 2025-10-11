@@ -4,8 +4,9 @@ body {
     line-height: 1.3em;
     margin: .5em;
     padding: 0;
-    background-color:#ffffffff;
     font-size:0.95em;
+
+    background-color:#ffffffff;
 }
 
 .header { font-family:serif; font-size: initial; }
@@ -260,4 +261,31 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
     display: inline-block;
     margin: 1px;
     padding: 1em;
+}
+
+
+@media (prefers-color-scheme: dark) {
+    body { background-color: #323339; color: #DDDEE0; }    
+    input { background-color: #28292E; color: #898A92;  }
+
+    .tag { background-color: #393a41; color: #c0c0c0; }
+    .tag.selected { color: #e0e0e0; }
+    .info-extensions .ext { background-color: #393a41; }
+    
+    .type { background-color: #494a51; color: #a0a0a0;  }
+
+    a { color: #7AAFF4; }
+    a:visited { color: #5e8aca; }
+
+    .links a:visited { color:#7AAFF4; }
+
+    .paths { background-color:#414248; }
+    .paths a { color: #999; }
+
+    .filelist-main { background-color: #323339; color: #DDDEE0; border-color: #666; }
+    .filelist-back { background-color: #898A92; }
+
+    .pagination a { color: #999; }
+    .pagination a:hover { background-color: #454545; }
+    .pagination a.selected { color: #ccc; }
 }
