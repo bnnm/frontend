@@ -275,24 +275,27 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 
 
 /*@media (prefers-color-scheme: dark) {*/
+
 .theme-dark { background-color: #323339; color: #DDDEE0; }    
 .theme-dark input { background-color: #28292E; color: #898A92;  }
-.theme-dark    .tag { background-color: #393a41; color: #c0c0c0; }
-.theme-dark    .tag.selected { color: #e0e0e0; }
-.theme-dark    .info-extensions .ext { background-color: #393a41; }
+.theme-dark .tag { background-color: #393a41; color: #c0c0c0; }
+.theme-dark .tag.selected { color: #e0e0e0; }
+.theme-dark .info-extensions .ext { background-color: #393a41; }
 .theme-dark .type { background-color: #494a51; color: #a0a0a0;  }
 .theme-dark a { color: #7AAFF4; }
-.theme-dark    a:visited { color: #5e8aca; }
+.theme-dark a:visited { color: #5085d4; }
 
-.theme-dark    .links a:visited { color:#7AAFF4; }
+.theme-dark .links a:visited { color:#7AAFF4; }
 
-.theme-dark    .paths { background-color:#414248; }
-.theme-dark    .paths a { color: #999; }
+.theme-dark .paths { background-color:#414248; }
+.theme-dark .paths a { color: #999; }
 
-.theme-dark    .filelist-main { background-color: #323339; color: #DDDEE0; border-color: #666; }
-.theme-dark    .filelist-back { background-color: #898A92; }
+.theme-dark .filelist-main { background-color: #323339; color: #DDDEE0; border-color: #666; }
+.theme-dark .filelist-back { background-color: #898A92; }
 
-.theme-dark    .pagination a { color: #999; }
-.theme-dark    .pagination a:hover { background-color: #454545; }
-.theme-dark    .pagination a.selected { color: #ccc; }
+.theme-dark .pagination a { color: #999; }
+.theme-dark .pagination a:hover { background-color: #454545; }
+.theme-dark .pagination a.selected { color: #ccc; }
+.theme-dark .filelist-fixable { color: #ccc; background-color: #3B3735; }
+
 /*}*/
