@@ -5,6 +5,27 @@
     <link>https://vgm.hcs64.com/</link>
     <description>VGM Updates</description>
     <item>
+      <title>Littlest Pet Shop (2008-10-14)(-)(Electronic Arts)[Wii]</title>
+      <link>https://wii.joshw.info/l/Littlest%20Pet%20Shop%20(2008-10-14)(-)(Electronic%20Arts)[Wii].7z</link>
+      <description>Updated!</description>
+      <pubDate>Sun, 09 Nov 2025 18:50:00 GMT</pubDate>
+      <guid>https://wii.joshw.info/l/27923787080?date=2025-11-09_18:50</guid>
+    </item>
+    <item>
+      <title>Raillore no Ryakudatsusha (2022-08-19)(3rdEye)(Moe App)[Android]</title>
+      <link>https://mobile.joshw.info/r/Raillore%20no%20Ryakudatsusha%20(2022-08-19)(3rdEye)(Moe%20App)[Android].7z</link>
+      <description>New!</description>
+      <pubDate>Sun, 09 Nov 2025 17:50:00 GMT</pubDate>
+      <guid>https://mobile.joshw.info/r/26852323197?date=2025-11-09_17:50</guid>
+    </item>
+    <item>
+      <title>ReOath -Kyoshin to Seijo Gaiten- (2025-05-29)(DMM GAMES)[Browser]</title>
+      <link>https://pc.joshw.info/r/ReOath%20-Kyoshin%20to%20Seijo%20Gaiten-%20(2025-05-29)(DMM%20GAMES)[Browser].7z</link>
+      <description>New!</description>
+      <pubDate>Sun, 09 Nov 2025 17:50:00 GMT</pubDate>
+      <guid>https://pc.joshw.info/r/26852323198?date=2025-11-09_17:50</guid>
+    </item>
+    <item>
       <title>Europa Universalis V (2025-11-04)(Paradox Tinto)(Paradox Interactive)[PC][unsorted]</title>
       <link>https://pc.joshw.info/e/Europa%20Universalis%20V%20(2025-11-04)(Paradox%20Tinto)(Paradox%20Interactive)[PC][unsorted].7z</link>
       <description>New!</description>
@@ -19,9 +40,9 @@
       <guid>https://switch.joshw.info/g/26852323192?date=2025-11-09_06:50</guid>
     </item>
     <item>
-      <title>Littlest Pet Shop (2008-10-14)(-)(Electronic Arts)[Wii][fix - remove base dir]</title>
-      <link>https://wii.joshw.info/l/Littlest%20Pet%20Shop%20(2008-10-14)(-)(Electronic%20Arts)[Wii][fix%20-%20remove%20base%20dir].7z</link>
-      <description>New!</description>
+      <title>Littlest Pet Shop (2008-10-14)(-)(Electronic Arts)[Wii][old]</title>
+      <link>https://wii.joshw.info/l/Littlest%20Pet%20Shop%20(2008-10-14)(-)(Electronic%20Arts)[Wii][old].7z</link>
+      <description>Old!</description>
       <pubDate>Sun, 09 Nov 2025 06:50:00 GMT</pubDate>
       <guid>https://wii.joshw.info/l/26852323193?date=2025-11-09_06:50</guid>
     </item>
@@ -682,27 +703,6 @@
       <description>New!</description>
       <pubDate>Sun, 19 Oct 2025 10:50:00 GMT</pubDate>
       <guid>https://switch.joshw.info/l/27927484328?date=2025-10-19_10:50</guid>
-    </item>
-    <item>
-      <title>Lost Eidolons - Veil of the Witch (2025-10-09)(Ocean Drive Studio)(Kakao Games Corp.)[Switch]</title>
-      <link>https://switch.joshw.info/l/Lost%20Eidolons%20-%20Veil%20of%20the%20Witch%20(2025-10-09)(Ocean%20Drive%20Studio)(Kakao%20Games%20Corp.)[Switch].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 19 Oct 2025 10:50:00 GMT</pubDate>
-      <guid>https://switch.joshw.info/l/27927484329?date=2025-10-19_10:50</guid>
-    </item>
-    <item>
-      <title>Mute Crimson DX (2024-08-16)(Iced Lizard Games)[PC]</title>
-      <link>https://pc.joshw.info/m/Mute%20Crimson%20DX%20(2024-08-16)(Iced%20Lizard%20Games)[PC].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 19 Oct 2025 10:50:00 GMT</pubDate>
-      <guid>https://pc.joshw.info/m/27927484332?date=2025-10-19_10:50</guid>
-    </item>
-    <item>
-      <title>Nameless, The - Slay Dragon (2025-08-27)(Nameless Sword Studio)(WhisperGames)[Switch]</title>
-      <link>https://switch.joshw.info/n/Nameless,%20The%20-%20Slay%20Dragon%20(2025-08-27)(Nameless%20Sword%20Studio)(WhisperGames)[Switch].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 19 Oct 2025 10:50:00 GMT</pubDate>
-      <guid>https://switch.joshw.info/n/27927484330?date=2025-10-19_10:50</guid>
     </item>
   </channel>
 </rss>
