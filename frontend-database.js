@@ -201,7 +201,6 @@ class Database {
             }
         });
 
-        console.log(terms);
         return terms;
     }
 

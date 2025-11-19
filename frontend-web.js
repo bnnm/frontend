@@ -413,11 +413,11 @@ function Web(cfg, db, pt) {
 
     function toggle_theme(theme_class) {
         const themes_classes = ['theme-light', 'theme-dark', 'theme-banana'];
-        console.log("toggle");
 
         if (document.body.classList.contains(theme_class)) {
             document.body.classList.remove(theme_class);
-            localStorage.removeItem('theme');
+            // maybe should to back to systemPrefersDark? 
+            localStorage.setItem('theme', 'theme-light');
         }
         else {
             document.body.classList.remove(...themes_classes);
@@ -427,10 +427,9 @@ function Web(cfg, db, pt) {
     }
 
     function load_theme() {
-        const user_theme  = localStorage.getItem('theme');
-        const systemPrefersDark  = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const user_theme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-        console.log("load");
         if (user_theme) {
             toggle_theme(user_theme);
         } else if (systemPrefersDark) {
