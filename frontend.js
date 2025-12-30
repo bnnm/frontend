@@ -74,8 +74,9 @@
         'switch': "Switch",
         'xone': "Xbox One",
         'xse': "Xbox Series",
-        'other': "Other systems",
         'amiga': "Amiga",
+        'atarist': "Atari ST",
+        'other': "Other systems",
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
     
@@ -84,6 +85,7 @@
     // file's suffix > sybsystem
     CONFIG.DB_TAGS_SUBSYSTEM = {
         '[amiga]': 'amiga',
+        '[atarist]': 'atarist',
     };
     // subdomain > default subsystem not defined above
     CONFIG.DB_SYSTEMS_DEFAULT_SUBSYSTEM = {
@@ -93,6 +95,7 @@
     // subsystem > system
     CONFIG.DB_SUBSYSTEMS_SYSTEM = {
         'amiga': 'cdi',
+        'atarist': 'cdi',
         'other': 'cdi',
     };
 
