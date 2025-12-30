@@ -233,9 +233,11 @@ function Printer(cfg, db) {
             $link.href = set.url;
             $link.textContent = set.basename;
 
-            let sysname = cfg.PT_SYSTEM_CONFIG[set.subdomain] || set.subdomain;
+
+            let subsystem = set.subsystem ? set.subsystem : set.subdomain;
+            let sysname = cfg.PT_SYSTEM_CONFIG[subsystem] || subsystem;
             let $system = $url.getElementsByClassName('sitetag')[0];
-            $system.dataset.site = set.subdomain;
+            $system.dataset.site = subsystem; //for queries
             $system.textContent = sysname;
 
             let $info = $url.getElementsByClassName('info')[0];

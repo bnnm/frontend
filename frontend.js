@@ -71,12 +71,30 @@
         'wiiu': "Wii U",
         'wsr': "WonderSwan",
         'mobile': "Mobile",
-        'cdi': "Other systems",
         'switch': "Switch",
         'xone': "Xbox One",
         'xse': "Xbox Series",
+        'other': "Other systems",
+        'amiga': "Amiga",
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
+    
+    // big subdomains can have sub-systems, pre-parsed during load and detected during searches
+    CONFIG.DB_SYSTEMS_WITH_SUBSYSTEMS = ['cdi']
+    // file's suffix > sybsystem
+    CONFIG.DB_TAGS_SUBSYSTEM = {
+        '[amiga]': 'amiga',
+    };
+    // subdomain > default subsystem not defined above
+    CONFIG.DB_SYSTEMS_DEFAULT_SUBSYSTEM = {
+        'cdi': 'other',
+    }
+
+    // subsystem > system
+    CONFIG.DB_SUBSYSTEMS_SYSTEM = {
+        'amiga': 'cdi',
+        'other': 'cdi',
+    };
 
     CONFIG.EXTS_EXTENTIONLESS = '(extensionless)'
 

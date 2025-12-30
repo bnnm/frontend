@@ -140,8 +140,16 @@ class Database {
 
     _is_match_site(site, set) {
         if (site) {
-            if (set.subdomain != site)
-                return false;
+            let cfg = this._cfg;
+
+            if (set.subsystem) {
+                let real_site = cfg.DB_SUBSYSTEMS_SYSTEM[site];
+                if (set.subdomain != real_site || set.subsystem != site)
+                    return false;
+            } else {
+                if (set.subdomain != site)
+                    return false;
+            }
         }
 
         return true;
@@ -278,7 +286,7 @@ class Database {
     }
 
     _include_subdomain(set) {
-        let sd = set.subdomain
+        let sd = set.subsystem ? set.subsystem : set.subdomain
         if (!this.subdomains[sd])
             this.subdomains[sd] = 0;
         this.subdomains[sd] += 1;
@@ -370,6 +378,22 @@ class DataSetup {
         if (set.sd) { // short name
             set.subdomain = set.sd;
             delete set.sd;
+        }
+
+        let cfg = this._cfg
+            
+        // domain has subsystems, detect and add an extra 'subsystem' tag for filtering
+        if (cfg.DB_SYSTEMS_WITH_SUBSYSTEMS.indexOf(set.subdomain) >= 0) {
+            let subsystem = cfg.DB_SYSTEMS_DEFAULT_SUBSYSTEM[set.subdomain];
+            for (const key of Object.keys(cfg.DB_TAGS_SUBSYSTEM)) {
+                 const value = cfg.DB_TAGS_SUBSYSTEM[key];
+                 if (set.basename_lw.indexOf(key) > 0) {
+                    subsystem = value;
+                    break;
+                 }
+            }
+
+            set.subsystem = subsystem;
         }
     }
 
