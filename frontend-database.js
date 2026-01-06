@@ -385,9 +385,9 @@ class DataSetup {
         // domain has subsystems, detect and add an extra 'subsystem' tag for filtering
         if (cfg.DB_SYSTEMS_WITH_SUBSYSTEMS.indexOf(set.subdomain) >= 0) {
             let subsystem = cfg.DB_SYSTEMS_DEFAULT_SUBSYSTEM[set.subdomain];
-            for (const key of Object.keys(cfg.DB_TAGS_SUBSYSTEM)) {
-                 const value = cfg.DB_TAGS_SUBSYSTEM[key];
-                 if (set.basename_lw.indexOf(key) > 0) {
+            for (const key of Object.keys(cfg.DB_PATHS_SUBSYSTEM)) {
+                 const value = cfg.DB_PATHS_SUBSYSTEM[key];
+                 if (set.name.indexOf(key) == 0) {
                     subsystem = value;
                     break;
                  }

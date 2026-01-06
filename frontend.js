@@ -75,28 +75,34 @@
         'xone': "Xbox One",
         'xse': "Xbox Series",
         'amiga': "Amiga",
-        'atarist': "Atari ST",
+        'atari_st': "Atari ST",
+        'j2me': "J2ME",
+        'gizmondo': "Gizmondo",
         'other': "Other systems",
     }
     CONFIG.DB_SYSTEMS = Object.keys(CONFIG.PT_SYSTEM_CONFIG);
     
     // big subdomains can have sub-systems, pre-parsed during load and detected during searches
     CONFIG.DB_SYSTEMS_WITH_SUBSYSTEMS = ['cdi']
-    // file's suffix > sybsystem
-    CONFIG.DB_TAGS_SUBSYSTEM = {
-        '[amiga]': 'amiga',
-        '[atarist]': 'atarist',
-    };
-    // subdomain > default subsystem not defined above
+    // subdomain > default subsystem not defined below
     CONFIG.DB_SYSTEMS_DEFAULT_SUBSYSTEM = {
         'cdi': 'other',
     }
+    // file's path > sybsystem
+    CONFIG.DB_PATHS_SUBSYSTEM = {
+        'amiga/': 'amiga',
+        'atari_st/': 'atari_st',
+        'j2me/': 'j2me',
+        'gizmondo/': 'gizmondo',
+    };
 
     // subsystem > system
     CONFIG.DB_SUBSYSTEMS_SYSTEM = {
-        'amiga': 'cdi',
-        'atarist': 'cdi',
         'other': 'cdi',
+        'amiga': 'cdi',
+        'atari_st': 'cdi',
+        'j2me': 'cdi',
+        'gizmondo': 'cdi',
     };
 
     CONFIG.EXTS_EXTENTIONLESS = '(extensionless)'
