@@ -142,9 +142,9 @@ Also better avoid tons of video that are just voices/sfx or silent.
 By keeping previous files their older timestamp is preserved. That makes detecting new songs easier.
 
 #### Avoid version numbers in the set name unless you have a good reason
-Like `Blah (2.0) (...)[...].7z`. This makes automation harder and previous set may not be detected as needing to be removed.
+Like `Blah (v2.0) (...)[...].7z`. This makes automation harder and previous set may not be detected as needing to be removed.
 
-A good reason to have (2.0) is for example when a game's audio changed drastically between versions (basically redone).
+A good reason to have `(v2.0)` is for example when a game's audio changed drastically between versions (basically redone).
 
 New audio added between versions should go in the original set, possibly in a N.N version subfolder if sizeable enough.
 
@@ -182,7 +182,7 @@ That would mean there is a base folder inside the set (like `/Game (yyyy-mm-dd)(
 
 Anybody may fix it and upload a fixed set like this: `Game (yyyy-mm-dd)(Dev)(Publisher)[PC][fixed].7z`.
 
-If the *(explanation)* is a mistake, please tell us in Discord or forums so we can recheck again. Sometimes it's hard to assess if the set is really correct. These tags are added not call you out personally, but simply as a reminder of something that can be improved.
+If the *(explanation)* is a mistake, please tell us in Discord or forums so we can recheck again. Sometimes it's hard to assess if the set is really correct. These tags are not added to call you out personally, but simply as a reminder of something that can be improved.
 
 
 ## Rationale
