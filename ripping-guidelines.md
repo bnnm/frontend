@@ -82,22 +82,27 @@ For raw data without extension (extracted from bigfiles), using `.vgmstream` + T
 
 
 ### Try to keep main audio (i.e. not movies) in the root of the 7z archive
-You may add a few folders to organize crowded sets, but there is no need to keep folders 1:1 like the original game (folders like `files/audio/bgm/stages/...` don't really benefit much) .
+You may add a few folders to organize crowded sets, but there is no need to keep folders 1:1 like the original game.
 
-If there are only a few files to begin with no point to keep them in a `bgm/` subfolder, either.
+Keeping folders like `files/game/release/audio/en/bgm/stages/city/music_stage_city.fsb` doesn't help us much, so at least some of the useless folders should be removed.
+
+If there are only a few files to begin, with no point to keep them in a `bgm/` subfolder, either.
 
 A typical layout would be:
 ```
 bgm01.fsb
 bgm02.fsb
 ...
-dlc1/bgm01.fsb
+dlc1/dlc_bgm01.fsb
 dlc1/...
 movies/intro.bik
+movies/...
 ```
 
 
 Consider adding `.M3U` or `.TXTP` if main files are in subfolders or must be sorted somehow.
+
+Also see "*Don't rename the game's files*".
 
 ### Don't upload partial updates and instead re-upload the full set with changes
 For example, don't upload a few files from the latest version of the game or the DLC separate from the main set.
@@ -151,7 +156,7 @@ New audio added between versions should go in the original set, possibly in a N.
 If you want to show that the set is up to date, best put that version in a text file. However, the set's modified date is often a better way to judge how current it is.
 
 #### Avoid renaming when reuploading existing sets
-If we have `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft)[PC]` don't upload an updated set like `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft Montreal)(Ubisoft)[PC][updated]`  (add *Ubisoft Montreal* to the name).
+If we have `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft)[PC]` don't upload an updated set like `Prince of Persia - The Sands of Time (2003-12-02)(Ubisoft Montreal)(Ubisoft)[PC][updated]`  (adds *Ubisoft Montreal* to the name).
 
 Automation tools can't detect these minute changes and wouldn't mark the set as updated, so we end up with a copy of the set.
 
@@ -167,12 +172,23 @@ If you name them `01-Title.flac`, `02-Boss.flac` and so on it's hard to know if 
 
 Instead name them in track order, like `Track02.flac` or `Track02 - Title.flac`, `Track03.flac` and so on, so the origin is clearer. You can use a `.m3u` to reorder if needed.
 
+Note that regular `.wav` (`bgm01.wav`) should not be converted to `.flac`.
+
 #### Don't mix games from different platforms
 Some games have different formats per platform (PC vs PS2 vs GameCube).
 
 Some cases files are 99% the same save for a few files.
 
 For now simply upload a separate set per platform and don't make subdir for PC / PS2 / GC with the few different files; there is enough server space to keep them separate.
+
+#### Remove byte-duplicates as needed
+Games often have several "full duplicates" (copies of the same file with different names) and "partial duplicates" (files that have different header but byte-exact audio content).
+
+Generally it's better to remove dupes if there are a lot of them, but just a few it shouldn't matter too much. Excess dupes can be fixed later anyway, and `.m3u` may include only "main" files too.
+
+It may be useful to leave them to avoid 'holes' in file numbering (`stage03.fsb`=original, `stage06.fsb`=dupe of 03), but if it's a bunch of demuxed videos from different regions it's better to remove them.
+
+Files that sound *similar* but aren't byte-duplicates should be kept, such as quieter variations or re-encodes at different qualities. Sometimes there are subtle differences that may not be apparent at first.
 
 
 ## [Fix - (explanation)] sets
