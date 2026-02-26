@@ -70,7 +70,13 @@ for set in data:
             if part.startswith('[fix-') or part.startswith('[fix '):
                 set['fix'] = True
 
-dump = json.dumps(data_new)
+#dump = json.dumps(data_new)
+
+# Instead of a big dump, do it by small parts and combine them to add line feeds
+# (this adds ~50-100kb but keeps git changes a bit saner)
+# Also remove extra spaces to shave off some bytes.
+parts = [json.dumps(obj, separators=(',', ':')) for obj in data] 
+dump = "[\n" + ",\n".join(parts) + "\n]"
 
 with open('index-clean.json', 'w', encoding='utf-8') as f:
     f.write(dump)
