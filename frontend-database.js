@@ -126,10 +126,6 @@ class Database {
                 }
             }
 
-            // don't forget pokéymons (cmp is already normalized)
-            if (term.normalize)
-                term = term.normalize('NFKD').replace(/[\u0300-\u036f]/g, "")
-
             // AND search, unlike original OR, and always partial matches
             if (!cmp.includes(term))
                 return false;
@@ -176,7 +172,7 @@ class Database {
     }
 
     _get_terms(text) {
-        text = text.toLowerCase()
+        text = normalize_text(text);
 
         // split by spaces not in quotes
         let temp_terms = text.match(/"[^"]*"|\S+/g);
@@ -192,10 +188,9 @@ class Database {
                 terms.push(part);
             }
             else {
-                part = part.replace(/[\/\\]/g, ' ');
-
-                // clean "game:subtitle"
+                // clean "game:subtitle" and paths, but skip for regexes
                 if (!part.startsWith(':')) {
+                    part = part.replace(/[\/\\]/g, ' ');
                     part = part.replace(/:/g, ' ');
                 }
 
@@ -297,6 +292,25 @@ class Database {
     }
 }
 
+function normalize_text(text) {
+    if (!text) return "";
+    text = text.toLowerCase();
+    
+    if (text.normalize) {
+        // remove standard combining marks, then  
+        // handle non-combining ligatures/letters
+        text = text.normalize('NFKD')
+            .replace(/[\u0300-\u036f]/g, "")
+            .replace(/æ/g, "ae")
+            .replace(/œ/g, "oe")
+            .replace(/ß/g, "ss")
+            .replace(/ø/g, "o")
+            .replace(/ł/g, "l")
+            .replace(/ð/g, "d")
+            .replace(/þ/g, "th");
+    }
+    return text;
+}
 
 function get_sizetype(sizebytes) {
     let size = sizebytes;
@@ -362,9 +376,7 @@ class DataSetup {
         if (index)
             basename = basename.substring(index + 1);
         set.basename = basename;
-        set.basename_lw = basename.toLowerCase();
-        if (set.basename_lw.normalize)
-            set.basename_lw = set.basename_lw.normalize('NFKD').replace(/[\u0300-\u036f]/g, "")
+        set.basename_lw = normalize_text(basename);
 
         if (basename.endsWith('.json') || basename.endsWith('.txt'))
             set.disabled = true;
