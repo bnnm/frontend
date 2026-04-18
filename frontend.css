@@ -13,14 +13,14 @@ body {
 h1, h2 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
 .info-extensions h2 { font-size: 1em; font-weight: bold; margin: 1em; padding: 0;  }
 
-#banana-style { cursor: pointer; display:inline-block; }
+#banana-style { cursor: pointer; display:inline-block; user-select: none; }
 #banana-style:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-#banana-theme { cursor: pointer; display:inline-block; }
+#banana-theme { cursor: pointer; display:inline-block; user-select: none; }
 #banana-theme:hover { animation: spin-back 2s linear infinite; animation-delay: 1s; }
 @keyframes spin-back {
   from { transform: rotate(0deg); }
