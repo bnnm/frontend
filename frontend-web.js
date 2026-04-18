@@ -7,10 +7,11 @@ var ns_wb = new function() {
 const $_id = (id) => document.getElementById(id);
 
 function Web(cfg, db, pt) {
-    let $banana = $_id('banana');
-    let $darkmode = $_id('dark-banana');
+    let $stylebtn = $_id('banana-style');
+    let $themebtn = $_id('banana-theme');
     let $main = $_id('main');
     let $paths = $_id('paths');
+    let $ostheme = window.matchMedia('(prefers-color-scheme: dark)');
 
     let $form = $_id('searchform');
     let $fpath = $form['path'];
@@ -22,15 +23,23 @@ function Web(cfg, db, pt) {
     let $fsort = $form['sort'];
 
     let last_target = null;
+    let user_theme = 'system';
+    let theme_order = ['system', 'light', 'dark'];
 
-    // debug mode
-    $banana.addEventListener('click', (event) => {
-        toggle_theme('theme-banana');
+    // style switch
+    $stylebtn.addEventListener('click', (event) => {
+        toggle_style();
     });
 
-    // dark mode
-    $darkmode.addEventListener('click', (event) => {
-        toggle_theme('theme-dark');
+    // theme switch
+    $themebtn.addEventListener('click', (event) => {
+        toggle_theme();
+    });
+
+    // system theme listener
+    $ostheme.addEventListener('change', (event) => {
+        if (user_theme === 'system')
+            document.body.classList.toggle('theme-dark', event.matches);
     });
 
     // navigation
@@ -411,29 +420,59 @@ function Web(cfg, db, pt) {
     }
 
 
-    function toggle_theme(theme_class) {
-        const themes_classes = ['theme-light', 'theme-dark', 'theme-banana'];
+    function toggle_theme() {
+        // reevaluate theme order whenever transitioning out of system theme
+        if (user_theme === 'system') {
+            theme_order = $ostheme.matches ? ['system', 'light', 'dark'] : ['system', 'dark', 'light'];
+        }
 
-        if (document.body.classList.contains(theme_class)) {
-            document.body.classList.remove(theme_class);
-            // maybe should to back to systemPrefersDark? 
-            localStorage.setItem('theme', 'theme-light');
-        }
-        else {
-            document.body.classList.remove(...themes_classes);
-            document.body.classList.add(theme_class);
-            localStorage.setItem('theme', theme_class);
-        }
+        const next_index = (theme_order.indexOf(user_theme) + 1) % 3;
+        set_theme(theme_order[next_index]);
+    }
+
+    function toggle_style() {
+        const is_classic = document.body.classList.contains('style-classic');
+        document.body.classList.toggle('style-classic', !is_classic);
+        localStorage.setItem('style', !is_classic ? 'classic' : 'default');
     }
 
     function load_theme() {
-        const user_theme = localStorage.getItem('theme');
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        let saved_theme = localStorage.getItem('theme');
 
-        if (user_theme) {
-            toggle_theme(user_theme);
-        } else if (systemPrefersDark) {
-            toggle_theme('theme-dark');
+        if (localStorage.getItem('style') === 'classic')
+            document.body.classList.add('style-classic');
+        else
+            document.body.classList.remove('style-classic');
+
+        // override initial theme order based on saved theme
+        if (saved_theme === 'light')
+            theme_order = ['light', 'dark', 'system'];
+        else if (saved_theme === 'dark')
+            theme_order = ['dark', 'light', 'system'];
+        else
+            saved_theme = 'system';
+
+        set_theme(saved_theme);
+    }
+
+    function set_theme(mode) {
+        user_theme = mode;
+        localStorage.setItem('theme', mode);
+        $themebtn.title = `Theme: ${mode}`;
+
+        // apply theme and update button style
+        if (mode === 'dark') {
+            document.body.classList.toggle('theme-dark', true);
+            $themebtn.classList.add('icon-fullbw');
+            $themebtn.classList.remove('icon-halfbw');
+        } else if (mode === 'light') {
+            document.body.classList.toggle('theme-dark', false);
+            $themebtn.classList.remove('icon-fullbw');
+            $themebtn.classList.remove('icon-halfbw');
+        } else {
+            document.body.classList.toggle('theme-dark', $ostheme.matches);
+            $themebtn.classList.remove('icon-fullbw');
+            $themebtn.classList.add('icon-halfbw');
         }
     }
 

@@ -13,20 +13,32 @@ body {
 h1, h2 { font-size: 1em; font-weight: normal; margin: 0; padding: 0;  }
 .info-extensions h2 { font-size: 1em; font-weight: bold; margin: 1em; padding: 0;  }
 
-#banana { cursor: pointer; display:inline-block; }
-#banana:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
+#banana-style { cursor: pointer; display:inline-block; }
+#banana-style:hover { animation: spin 2s linear infinite; animation-delay: 1s; }
 @keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
-#dark-banana { cursor: pointer; display:inline-block;  filter: grayscale(100%); }
-#dark-banana:hover { animation: spin-back 2s linear infinite; animation-delay: 1s; }
+#banana-theme { cursor: pointer; display:inline-block; }
+#banana-theme:hover { animation: spin-back 2s linear infinite; animation-delay: 1s; }
 @keyframes spin-back {
   from { transform: rotate(0deg); }
   to { transform: rotate(-360deg); }
 }
 
+.icon-fullbw { filter: grayscale(100%); }
+
+.icon-halfbw { position: relative; }
+
+.icon-halfbw::after {
+  content: attr(data-icon);
+  position: absolute;
+  top: 0;
+  left: 0;
+  filter: grayscale(100%);
+  clip-path: inset(50% 0 0 0);
+}
 
 a { color: #0000ee; cursor: pointer; text-decoration: none; }
 a:hover { text-decoration: underline; }
@@ -266,12 +278,13 @@ body.overlayed { overflow:hidden; /* remove scroll */ }
 }
 
 /* TODO: use CSS variables? */
-.theme-banana { font-family: serif;   }
-.theme-banana .header a { font-size:1.00em; }
-.theme-banana h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; }
-.theme-banana a { color:rgb(9, 105, 218); font-size:1.05em; }
-.theme-banana .systems,
-.theme-banana .pagination { user-select: none; }
+.style-classic { font-family: serif;   }
+.style-classic .header a { font-size:1.00em; }
+.style-classic h1 { background-color:#ffec04;  _outline: 1px solid #3c7f9c; border-radius: 5px; }
+.style-classic.theme-dark h1 { background-color: #6b6300; }
+.style-classic a { color:rgb(9, 105, 218); font-size:1.05em; }
+.style-classic .systems,
+.style-classic .pagination { user-select: none; }
 
 
 /*@media (prefers-color-scheme: dark) {*/
