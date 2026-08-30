@@ -26,9 +26,11 @@
     CONFIG.DB_REVERSED_EXTS = ['mod','md','cust','smus','instr','ss','p4x','mdat','mus','core','tune','bp','jpn','smp','pru2','flac','smpl'];
 
     let exts_types = {
-        'ext-txt': ['!tags.m3u','txt','m3u','xml','xml~','json','ini','cue','sh','bat','ps1','lua'], //bms
-        'ext-bin': ['bin','7z','zip','rar','lzh','png','jpg','jpeg','exe',  'fev','ktsl2gcbin','bfsar','brsar','bcsar','bisar','names','zarc','db','lz'],
-        'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib']
+        'ext-txt': ['txt','m3u','fpl','xml','xml~','json','ini','cue','sh','bat','ps1','lua','ds_store'], //bms
+        'ext-bin': ['bin','7z','zip','rar','lzh','png','jpg','jpeg','exe','elf','names','zarc','db','lz'],
+        'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib'],
+        'ext-cfg': ['acf','fev','ktsl2gcbin','bfsar','brsar','bcsar','bisar'],
+        'ext-vsm': ['!tags.m3u','txth','txtp','txtm','genh','hcakey','awckey','bgmkey','xenkey','ps3key'],
     }
     CONFIG.PT_TOTALS_EXT_TYPE = map_exts(exts_types);
     CONFIG.PT_TOTALS_TYPES_INFO = {
@@ -36,6 +38,8 @@
         'ext-txt':'text files',
         'ext-bin':'bin files',
         'ext-lib':'lib files',
+        'ext-cfg':'config files',
+        'ext-vsm':'vgmstream files',
     };
     CONFIG.PT_PAGE_RESULTS = 100;
     CONFIG.PT_SYSTEM_CONFIG = {
