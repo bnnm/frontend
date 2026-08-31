@@ -487,6 +487,7 @@ class FilelistSetup {
             // after loading dir/name
             let ext = this._extract_ext(set, file);
             ext = ext.toLowerCase();
+            ext = ext.replace(/\s/g, '_'); // spaces in exts affect stuff
             file.ext = ext;
 
             if (!filelist.extensions.includes(ext))
