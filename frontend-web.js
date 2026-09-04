@@ -54,54 +54,34 @@ function Web(cfg, db, pt) {
     $main.addEventListener('click', (event) => {
         if (!event.target.matches('[data-site], [data-page], [data-set], [data-ext], [data-sort]'))
             return;
-        let ds = event.target.dataset;
-
         enable_effects(event.target);
 
-        //TODO: call reset function?
-        $fpath.value = '';
-        $fset.value = '';
-        //$fexts.value = '';
-        //$fsort.value = '';
-
-        let site = ds.site;
-        if (site !== undefined) {
-            if (site === $fsite.value)
-                site = '';
-            $fpage.value = '';
-            $fsite.value = site;
-        }
-
-        let page = ds.page;
-        if (page !== undefined) {
-            $fpage.value = page;
-            window.scroll(0,0);
-        }
-
-        let set = ds.set;
-        if (set !== undefined) {
-            $fset.value = set;
-        }
-
-        let ext = ds.ext;
-        if (ext !== undefined) {
-            if (ext === $fexts.value)
-                ext = '';
-            $fexts.value = ext;
-        }
-
-        let sort = ds.sort;
-        if (sort !== undefined) {
-            if (sort === $fsort.value)
-                sort = '';
-            $fsort.value = sort;
-        }
+        load_filters(event.target);
 
         update_browser_url();
         submit();
 
         //TODO: dispatchEvent (no validation), onclick, requestSubmit (no safari)
         //$form.submit();
+    });
+
+    // middle click
+    $main.addEventListener('mousedown', (event) => {
+        if (!event.target.matches('[data-site], [data-page], [data-set], [data-ext], [data-sort]'))
+            return;
+        if (event.button !== 1)
+            return;
+
+        //TODO: improve
+        let filters = save_filters();
+
+        load_filters(event.target);
+
+        let url = get_form_url();
+        window.open(url, "_blank");
+        event.preventDefault();
+
+        restore_filters(filters);
     });
 
     // search form
@@ -153,6 +133,70 @@ function Web(cfg, db, pt) {
             submit_current_set();
     }
 
+    function save_filters() {
+        let filters = {
+            fpath: $fpath.value,
+            fset: $fset.value,
+            fpage: $fpage.value,
+            fsite: $fsite.value,
+            fexts: $fexts.value,
+            fsort: $fsort.value,
+        }
+        return filters;
+    }
+
+    function restore_filters(filters) {
+        $fpath.value = filters.fpath;
+        $fset.value = filters.fset;
+        $fpage.value = filters.fpage;
+        $fsite.value = filters.fsite;
+        $fexts.value = filters.fexts;
+        $fsort.value = filters.fsort;
+    }
+
+    function load_filters(target) {
+        let ds = target.dataset;
+
+        //TODO: call reset function?
+        $fpath.value = '';
+        $fset.value = '';
+        //$fexts.value = '';
+        //$fsort.value = '';
+
+        let site = ds.site;
+        if (site !== undefined) {
+            if (site === $fsite.value)
+                site = '';
+            $fpage.value = '';
+            $fsite.value = site;
+        }
+
+        let page = ds.page;
+        if (page !== undefined) {
+            $fpage.value = page;
+            window.scroll(0,0);
+        }
+
+        let set = ds.set;
+        if (set !== undefined) {
+            $fset.value = set;
+        }
+
+        let ext = ds.ext;
+        if (ext !== undefined) {
+            if (ext === $fexts.value)
+                ext = '';
+            $fexts.value = ext;
+        }
+
+        let sort = ds.sort;
+        if (sort !== undefined) {
+            if (sort === $fsort.value)
+                sort = '';
+            $fsort.value = sort;
+        }
+    }
+
     function submit_current_set() {
         let setId = $fset.value;
 
@@ -202,27 +246,32 @@ function Web(cfg, db, pt) {
         last_target = null;
     }
 
+    function get_form_url(current) {
+        if (current)
+            return current;
+        
+        let data = new FormData($form)
+        let params = new URLSearchParams(data);
+
+        // clean empty params (with a copy)
+        [...params.entries()].forEach(([key, value]) => {
+            if (!value) //0 or ''
+                params.delete(key);
+        });
+
+        let url = params.toString();
+        url = `?${url}`; //force '?' (update)
+
+        return url;
+    }
+
     function update_browser_url(current) {
         let state = {
             //curr_x: 0, //window.pageXOffset,
             //curr_y: document.body.offsetTop //window.pageYOffset,
         }
 
-        let url = current;
-        if (!url) {
-            let data = new FormData($form)
-            let params = new URLSearchParams(data);
-
-            // clean empty params (with a copy)
-            [...params.entries()].forEach(([key, value]) => {
-                if (!value) //0 or ''
-                    params.delete(key);
-            });
-
-            url = params.toString();
-            url = `?${url}`; //force '?'
-        }
-
+        let url = get_form_url(current);
         history.pushState(state, null, url);
     }
 

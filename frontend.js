@@ -30,7 +30,7 @@
         'ext-bin': ['bin','7z','zip','rar','lzh','png','bmp','jpg','jpeg','ico','exe','dll','asi','ps-elf','names','zarc','db','lz'],
         'ext-lib': ['2sflib','ncsflib','dsflib','gsflib','psflib','psf2lib','snsflib','ssflib','usflib'],
         'ext-cfg': ['acf','fev','ktsl2gcbin','bfsar','brsar','bcsar','bisar'],
-        'ext-vsm': ['!tags.m3u','txth','txtp','txtm','genh','hcakey','awckey','bgmkey','xenkey','ps3key'],
+        'ext-vsm': ['!tags.m3u','txth','txtp','txtm','genh','hcakey','awckey','bgmkey','xenkey','ps3key','usmkey','fsbkey','awbkey'],
     }
     CONFIG.PT_TOTALS_EXT_TYPE = map_exts(exts_types);
     CONFIG.PT_TOTALS_TYPES_INFO = {
