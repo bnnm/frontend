@@ -5,6 +5,20 @@
     <link>https://vgm.hcs64.com/</link>
     <description>VGM Updates</description>
     <item>
+      <title>Pikmin 4 (2023-07-21)(Nintendo EPD, Eighting)(Nintendo)[Switch]</title>
+      <link>https://switch.joshw.info/p/Pikmin%204%20(2023-07-21)(Nintendo%20EPD,%20Eighting)(Nintendo)[Switch].7z</link>
+      <description>New!</description>
+      <pubDate>Thu, 29 Oct 2026 19:48:00 GMT</pubDate>
+      <guid>https://switch.joshw.info/p/26850923757?date=2026-10-29_19:48</guid>
+    </item>
+    <item>
+      <title>Pokemon Masters EX (2019-08-29)(DeNA)[Android]</title>
+      <link>https://mobile.joshw.info/p/Pokemon%20Masters%20EX%20(2019-08-29)(DeNA)[Android].7z</link>
+      <description>Updated!</description>
+      <pubDate>Thu, 29 Oct 2026 19:48:00 GMT</pubDate>
+      <guid>https://mobile.joshw.info/p/27990570893?date=2026-10-29_19:48</guid>
+    </item>
+    <item>
       <title>Ace Combat - Northern Wings (2011-12)(Namco Bandai Networks Romania)(Bandai Namco)[J2ME]</title>
       <link>https://cdi.joshw.info/j2me/Ace%20Combat%20-%20Northern%20Wings%20(2011-12)(Namco%20Bandai%20Networks%20Romania)(Bandai%20Namco)[J2ME].7z</link>
       <description>New!</description>
@@ -110,9 +124,9 @@
       <guid>https://pc.joshw.info/p/27990570889?date=2026-10-28_17:50</guid>
     </item>
     <item>
-      <title>Pokemon Masters EX (2019-08-29)(DeNA)[Android][fix - remove base folder]</title>
-      <link>https://mobile.joshw.info/p/Pokemon%20Masters%20EX%20(2019-08-29)(DeNA)[Android][fix%20-%20remove%20base%20folder].7z</link>
-      <description>New!</description>
+      <title>Pokemon Masters EX (2019-08-29)(DeNA)[Android][old]</title>
+      <link>https://mobile.joshw.info/p/Pokemon%20Masters%20EX%20(2019-08-29)(DeNA)[Android][old].7z</link>
+      <description>Old!</description>
       <pubDate>Wed, 28 Oct 2026 17:50:00 GMT</pubDate>
       <guid>https://mobile.joshw.info/p/27990570890?date=2026-10-28_17:50</guid>
     </item>
@@ -689,20 +703,6 @@
       <description>New!</description>
       <pubDate>Sun, 11 Oct 2026 17:50:00 GMT</pubDate>
       <guid>https://nsf.joshw.info/m/27988791012?date=2026-10-11_17:50</guid>
-    </item>
-    <item>
-      <title>Takahashi Meijin no Bouken Jima IV (1994-06-24)(-)(Hudson)[NES]</title>
-      <link>https://nsf.joshw.info/t/Takahashi%20Meijin%20no%20Bouken%20Jima%20IV%20(1994-06-24)(-)(Hudson)[NES].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 11 Oct 2026 17:50:00 GMT</pubDate>
-      <guid>https://nsf.joshw.info/t/27988791001?date=2026-10-11_17:50</guid>
-    </item>
-    <item>
-      <title>Takahashi Meijin no Bugutte Honey (1987-06-05)(Hudson)[NES]</title>
-      <link>https://nsf.joshw.info/t/Takahashi%20Meijin%20no%20Bugutte%20Honey%20(1987-06-05)(Hudson)[NES].7z</link>
-      <description>New!</description>
-      <pubDate>Sun, 11 Oct 2026 17:50:00 GMT</pubDate>
-      <guid>https://nsf.joshw.info/t/27988790997?date=2026-10-11_17:50</guid>
     </item>
   </channel>
 </rss>
